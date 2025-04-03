@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Jo
 import { User } from '../../users/entities/users.entity';
 import { Article } from '../../articles/entities/article.entity';
 
-@Entity('ratings')
+@Entity({ name: 'ratings' })
 export class Rating {
   @PrimaryGeneratedColumn('uuid')
   rating_id: string;
