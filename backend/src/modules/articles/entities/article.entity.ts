@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/users.entity';
 import { Category } from '../entities/category.entity';
+import { Comments } from 'src/modules/comments/entities/comments.entity';
 
 @Entity({ name: 'articles' })
 export class Article {
@@ -18,7 +19,7 @@ export class Article {
 
   @Column({ type: 'text' })
   description: string;
-  
+
   @Column({ type: 'text' })
   content: string;
 
@@ -39,6 +40,9 @@ export class Article {
   @Column({ type: 'int', default: 0 })
   views: number;
 
+  @OneToMany(() => Comments, (comment) => comment.article)
+  comments: Comments[];
+  
   @CreateDateColumn()
   created_at: Date;
 
