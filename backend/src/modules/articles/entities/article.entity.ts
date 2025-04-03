@@ -23,7 +23,7 @@ export class Article {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   summary: string;
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
@@ -34,7 +34,7 @@ export class Article {
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  @Column({ type: 'text', array: true })
+  @Column({ type: 'text', array: true, nullable: true })
   tags: string[];
 
   @Column({ type: 'int', default: 0 })
