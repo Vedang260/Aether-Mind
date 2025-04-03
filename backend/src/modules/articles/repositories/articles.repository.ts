@@ -3,6 +3,7 @@ import { Articles } from "../entities/article.entity";
 import { Repository } from "typeorm";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CreateArticleDto } from "../dtos/createArticle.dto";
+import { UpdateArticleDto } from "../dtos/updateArticle.dto";
 
 @Injectable()
 export class ArticlesRepository{
@@ -21,9 +22,9 @@ export class ArticlesRepository{
         }
     }
 
-    async updateArticle(article_id: string, content: string, summary: string, tags: string[]): Promise<boolean>{
+    async updateArticle(article_id: string, updateArticleDto: Partial<UpdateArticleDto>): Promise<boolean>{
         try{
-            const updateResult = await this.articlesRepository.update(article_id, { content, summary, tags });
+            const updateResult = await this.articlesRepository.update(article_id, updateArticleDto);
             return (updateResult.affected && updateResult.affected > 0 ? true : false)
         }catch(error){
             console.error('Error in updating an article: ', error.message);
