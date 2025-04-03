@@ -4,7 +4,7 @@ import { Category } from '../entities/category.entity';
 import { Comments } from 'src/modules/comments/entities/comments.entity';
 
 @Entity({ name: 'articles' })
-export class Article {
+export class Articles {
   @PrimaryGeneratedColumn('uuid')
   article_id: string;
 
