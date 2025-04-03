@@ -80,4 +80,21 @@ export class ArticlesService{
         }
     }
 
+    async getArticle(article_id: string): Promise<{ success: boolean; message: string; article: Articles | null}>{
+        try{
+            const article = await this.articlesRepository.getArticle(article_id);
+            return{
+                success: true,
+                message: 'Start reading your Article',
+                article: article
+            }
+        }catch(error){
+            console.error('Error in fetching an article: ', error.message);
+            return{
+                success: false,
+                message: 'Failed to fetch the article',
+                article: null
+            }
+        }
+    }
 }

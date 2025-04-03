@@ -5,7 +5,7 @@ export class AIService {
     // hugging face api key
     private huggingFaceApiKey = process.env.HUGGING_FACE_API_KEY;
 
-    async generateSumaary(content: string): Promise<string>{
+    async generateSummary(content: string): Promise<string>{
         try{
             const response = await axios.post(
                 "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
