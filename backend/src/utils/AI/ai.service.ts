@@ -1,17 +1,12 @@
+import { HfInference, InferenceClient } from "@huggingface/inference";
 import { InternalServerErrorException } from "@nestjs/common";
 import axios from "axios";
-import OpenAI from "openai";
-import { Completions } from "openai/resources/chat";
-        
-const client = new OpenAI({
-    apiKey: process.env.XAI_API_KEY,
-    baseURL: "https://api.x.ai/v1",
-});
+import OpenAI from 'openai';
 
 export class AIService {
     // hugging face api key
     private huggingFaceApiKey = process.env.HUGGING_FACE_API_KEY;
-
+    
     async generateSummary(content: string): Promise<string>{
         try{
             const response = await axios.post(
@@ -53,95 +48,92 @@ export class AIService {
         }
     }    
 
-    async getImageCaption(imageUrl: string): Promise<string> {
-        try{
-            const response = await axios.post(
-                'https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base',
-                { inputs: imageUrl },
-                {
-                  headers: {
-                    Authorization: `Bearer ${this.huggingFaceApiKey}`,
-                  },
-                },
-            );
-            return response.data[0].generated_text;
-        }catch(error){
-            console.error('Error in generating a caption for the image: ', error.message);
-            throw new InternalServerErrorException('Failed to generate the image Caption');
-        }
-    }
+    // async getImageCaption(imageUrl: string){
+    //     const response = await this.openai.chat.completions.create({
+    //         model: "gpt-4-vision-preview",
+    //         messages: [{
+    //           role: "user",
+    //           content: [
+    //             { type: "text", text: "Analyze & Describe this image in detail." },
+    //             { type: "image_url", image_url: { url: imageUrl } },
+    //           ],
+    //         }],
+    //     });
+    //     console.log(response);
+    // }
 
-    async generateArticleFromImage(image_url: string): Promise<{ title: string; description: string; content: string }> {
-        try {
-            const caption = await this.getImageCaption(image_url);
-            // Define the advanced prompt
-            const advancedPrompt = `
-                As a professional content writer with expertise in visual analysis, create a comprehensive article based on this caption: ${caption}.
-                **Requirements:**
-                1. Title: Catchy, 5-8 words, SEO-friendly
-                2. Description: 1-2 sentences, 150-160 characters
-                3. Article Content:
-                   - Introduction (100 words): Context setting
-                   - Main Body (500-600 words):
-                     * 3-5 subsections with H2 headings
-                     * Include relevant facts, statistics, history
-                     * Add cultural/social context if applicable
-                   - Conclusion (100 words): Summary + thought-provoking ending
-                **Writing Style:**
-                - Professional yet accessible
-                - Engaging narrative flow
-                - Accurate technical details
-                - Include analogies for complex concepts
-                - Add "Did You Know?" boxes for interesting facts
-                **Special Instructions:**
-                - If the image contains people, analyze their activities/emotions
-                - For products/artifacts, include origin/history/usage
-                - For nature scenes, discuss geographical/ecological aspects
-                - For abstract images, provide creative interpretations
-                **Output Format:**
-                - Return as a JSON object with properties: title, description, content (object with introduction, mainBody array, conclusion)
-            `;
+    // async generateArticleFromImage(image_url: string): Promise<{ title: string; description: string; content: string }> {
+    //     try {
+    //         const caption = await this.getImageCaption(image_url);
+    //         console.log("Image Caption: ", caption);
+    //         // Define the advanced prompt
+    //         const advancedPrompt = `
+    //             As a professional content writer with expertise in visual analysis, create a comprehensive article based on this caption: ${caption}.
+    //             **Requirements:**
+    //             1. Title: Catchy, 5-8 words, SEO-friendly
+    //             2. Description: 1-2 sentences, 150-160 characters
+    //             3. Article Content:
+    //                - Introduction (100 words): Context setting
+    //                - Main Body (500-600 words):
+    //                  * 3-5 subsections with H2 headings
+    //                  * Include relevant facts, statistics, history
+    //                  * Add cultural/social context if applicable
+    //                - Conclusion (100 words): Summary + thought-provoking ending
+    //             **Writing Style:**
+    //             - Professional yet accessible
+    //             - Engaging narrative flow
+    //             - Accurate technical details
+    //             - Include analogies for complex concepts
+    //             - Add "Did You Know?" boxes for interesting facts
+    //             **Special Instructions:**
+    //             - If the image contains people, analyze their activities/emotions
+    //             - For products/artifacts, include origin/history/usage
+    //             - For nature scenes, discuss geographical/ecological aspects
+    //             - For abstract images, provide creative interpretations
+    //             **Output Format:**
+    //             - Return as a JSON object with properties: title, description, content (object with introduction, mainBody array, conclusion)
+    //         `;
     
-            const response = await axios.post(
-                'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', // You can also try 'tiiuae/falcon-7b-instruct'
-                { inputs: advancedPrompt },
-                {
-                  headers: {
-                    Authorization: `Bearer ${this.huggingFaceApiKey}`,
-                  },
-                },
-            );
-            console.log("Response: ", response);
+    //         const response = await axios.post(
+    //             'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', // You can also try 'tiiuae/falcon-7b-instruct'
+    //             { inputs: advancedPrompt },
+    //             {
+    //               headers: {
+    //                 Authorization: `Bearer ${this.huggingFaceApiKey}`,
+    //               },
+    //             },
+    //         );
+    //         //console.log("Response: ", response);
 
-            const rawOutput = response.data?.[0]?.generated_text;
-            if (!rawOutput) {
-                throw new Error('No article generated');
-            }
+    //         const rawOutput = response.data?.[0]?.generated_text;
+    //         if (!rawOutput) {
+    //             throw new Error('No article generated');
+    //         }
 
-            // Parse JSON if model outputs structured JSON
-            let articleData: any;
-            try {
-                articleData = JSON.parse(rawOutput);
-            } catch {
-                throw new Error('Output is not valid JSON. Try using a more structured model like Falcon or format the response manually.');
-            }
+    //         // Parse JSON if model outputs structured JSON
+    //         let articleData: any;
+    //         try {
+    //             articleData = JSON.parse(rawOutput);
+    //         } catch {
+    //             throw new Error('Output is not valid JSON. Try using a more structured model like Falcon or format the response manually.');
+    //         }
 
-            // Build markdown content
-            let fullContent = `## Introduction\n${articleData.content.introduction}\n\n`;
-            articleData.content.mainBody.forEach((section: { heading: string; text: string }) => {
-                fullContent += `## ${section.heading}\n${section.text}\n\n`;
-            });
-            fullContent += `## Conclusion\n${articleData.content.conclusion}`;
+    //         // Build markdown content
+    //         let fullContent = `## Introduction\n${articleData.content.introduction}\n\n`;
+    //         articleData.content.mainBody.forEach((section: { heading: string; text: string }) => {
+    //             fullContent += `## ${section.heading}\n${section.text}\n\n`;
+    //         });
+    //         fullContent += `## Conclusion\n${articleData.content.conclusion}`;
 
-            return {
-                title: articleData.title,
-                description: articleData.metaDescription,
-                content: fullContent,
-            };
+    //         return {
+    //             title: articleData.title,
+    //             description: articleData.metaDescription,
+    //             content: fullContent,
+    //         };
     
-        } catch (error) {
-            console.error('Error in generating the article from image: ', error.message);
-            throw new Error('Failed to generate content for the article');
-        }
-    }
+    //     } catch (error) {
+    //         console.error('Error in generating the article from image: ', error.message);
+    //         throw new Error('Failed to generate content for the article');
+    //     }
+    // }
 }

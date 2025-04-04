@@ -116,21 +116,21 @@ export class ArticlesService{
         }
     }
 
-    async generateArticleFromImage(image_url: string): Promise<{ success: boolean; message: string; article: any}>{
-        try{
-            const response = await this.aiService.generateArticleFromImage(image_url);
-            return {
-                success: true,
-                message: 'Your AI-article is generated',
-                article: response
-            }
-        }catch(error){
-            console.error('Error in generating an Article from Image using AI: ', error.message);
-            return {
-                success: false,
-                message: 'Your AI-article is generated',
-                article: null
-            }
-        }
-    }
+    // async generateArticleFromImage(image_url: string): Promise<{ success: boolean; message: string; article: any}>{
+    //     try{
+    //         const response = await this.aiService.generateArticleFromImage(image_url);
+    //         return {
+    //             success: true,
+    //             message: 'Your AI-article is generated',
+    //             article: response
+    //         }
+    //     }catch(error){
+    //         console.error('Error in generating an Article from Image using AI: ', error.message);
+    //         return {
+    //             success: false,
+    //             message: 'Your AI-article is generated',
+    //             article: null
+    //         }
+    //     }
+    // }
 }
