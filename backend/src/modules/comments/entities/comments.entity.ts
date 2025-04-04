@@ -1,4 +1,4 @@
-import { Article } from "src/modules/articles/entities/article.entity";
+import { Articles } from "src/modules/articles/entities/article.entity";
 import { User } from "src/modules/users/entities/users.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -13,9 +13,9 @@ export class Comments {
     @Column({ type: 'uuid' })
     user_id: string;
 
-    @ManyToOne(() => Article, (article) => article.comments, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Articles, (article) => article.comments, { onDelete: 'CASCADE'})
     @JoinColumn({ name: 'article_id' })
-    article: Article;
+    article: Articles;
 
     @ManyToOne(() => User, (user) => user.id, {onDelete: 'CASCADE'})
     @JoinColumn({ name: 'user_id'})
