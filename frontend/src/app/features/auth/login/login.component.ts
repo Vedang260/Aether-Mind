@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/auth/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
     selector: 'app-login',
@@ -19,6 +20,17 @@ import { MatIconModule } from '@angular/material/icon';
         MatInputModule,
         MatButtonModule,
         ReactiveFormsModule, MatIconModule],
+    animations: [
+        trigger('cardAnimation', [
+            state('void', style({
+            opacity: 0,
+            transform: 'translateY(20px)'
+            })),
+            transition('void => *', [
+            animate('0.5s ease-out')
+            ])
+        ])
+    ],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })

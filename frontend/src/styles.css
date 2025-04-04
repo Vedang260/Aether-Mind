@@ -1,16 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 body {
     font-family: 'Poppins', sans-serif;
+}
+  :root {
+    --primary-color: #8995d7; /* Indigo */
+    --accent-color: #e91e63;  /* Pink */
   }
-  $my-primary: mat-palette($mat-indigo);
-  $my-accent:  mat-palette($mat-pink, A200, A100, A400);
   
-  $my-theme: mat-light-theme((
-    color: (
-      primary: $my-primary,
-      accent: $my-accent,
-    )
-  ));
+  body {
+    font-family: 'Poppins', sans-serif;
+  }
   
-  @include angular-material-theme($my-theme);
-    
+  .mat-button {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .mat-accent {
+    color: var(--accent-color);
+  }
+  
