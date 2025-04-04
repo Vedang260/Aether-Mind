@@ -1,5 +1,12 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import axios from "axios";
+import OpenAI from "openai";
+import { Completions } from "openai/resources/chat";
+        
+const client = new OpenAI({
+    apiKey: process.env.XAI_API_KEY,
+    baseURL: "https://api.x.ai/v1",
+});
 
 export class AIService {
     // hugging face api key
@@ -46,55 +53,95 @@ export class AIService {
         }
     }    
 
-    async analyzeImage(image_url: string){
+    async getImageCaption(imageUrl: string): Promise<string> {
         try{
             const response = await axios.post(
-                'https://api.clarifai.com/v2/models/general-image-recognition/versions/aa7f35c01e0642fda5cf400f543e7c40/outputs',
+                'https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base',
+                { inputs: imageUrl },
                 {
-                    inputs: [{ data: { image: { url: image_url }}}],
-                },
-                {
-                    headers: {
-                        Authorization: `Key ${process.env.CLARIFAI_API_KEY}`
-                    },
+                  headers: {
+                    Authorization: `Bearer ${this.huggingFaceApiKey}`,
+                  },
                 },
             );
-            return response.data;
+            return response.data[0].generated_text;
         }catch(error){
-            console.error('Error in analyzing an image: ', error.message);
-            throw new InternalServerErrorException('Failed to analyze your image');
+            console.error('Error in generating a caption for the image: ', error.message);
+            throw new InternalServerErrorException('Failed to generate the image Caption');
         }
     }
 
-    async generateArticleFromImage(image_url: string){
-        try{
-            const analysis = await this.analyzeImage(image_url);
-            const concepts = analysis.outputs[0].data.concepts;
-            
-            const prompt = `Generate an innovative & structured article in JSON format with title, 1 liner description, and 
-                            detailed content such that users can find it useful, engaging and can improve their knowledge & understanding 
-                            based on: ${concepts.map(c => c.name).join(', ')}.`;
-            
+    async generateArticleFromImage(image_url: string): Promise<{ title: string; description: string; content: string }> {
+        try {
+            const caption = await this.getImageCaption(image_url);
+            // Define the advanced prompt
+            const advancedPrompt = `
+                As a professional content writer with expertise in visual analysis, create a comprehensive article based on this caption: ${caption}.
+                **Requirements:**
+                1. Title: Catchy, 5-8 words, SEO-friendly
+                2. Description: 1-2 sentences, 150-160 characters
+                3. Article Content:
+                   - Introduction (100 words): Context setting
+                   - Main Body (500-600 words):
+                     * 3-5 subsections with H2 headings
+                     * Include relevant facts, statistics, history
+                     * Add cultural/social context if applicable
+                   - Conclusion (100 words): Summary + thought-provoking ending
+                **Writing Style:**
+                - Professional yet accessible
+                - Engaging narrative flow
+                - Accurate technical details
+                - Include analogies for complex concepts
+                - Add "Did You Know?" boxes for interesting facts
+                **Special Instructions:**
+                - If the image contains people, analyze their activities/emotions
+                - For products/artifacts, include origin/history/usage
+                - For nature scenes, discuss geographical/ecological aspects
+                - For abstract images, provide creative interpretations
+                **Output Format:**
+                - Return as a JSON object with properties: title, description, content (object with introduction, mainBody array, conclusion)
+            `;
+    
             const response = await axios.post(
-                'https://api.openai.com/v1/chat/completions',
+                'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', // You can also try 'tiiuae/falcon-7b-instruct'
+                { inputs: advancedPrompt },
                 {
-                model: 'gpt-3.5-turbo',
-                response_format: { type: "json_object" }, // Important for JSON output
-                messages: [
-                    { role: "system", content: "You are a helpful assistant that generates Innovative & Kowledge Based Articles containing title, description & content & outputs in JSON." },
-                    { role: "user", content: prompt }
-                ]
+                  headers: {
+                    Authorization: `Bearer ${this.huggingFaceApiKey}`,
+                  },
                 },
-                { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
             );
+            console.log("Response: ", response);
+
+            const rawOutput = response.data?.[0]?.generated_text;
+            if (!rawOutput) {
+                throw new Error('No article generated');
+            }
+
+            // Parse JSON if model outputs structured JSON
+            let articleData: any;
+            try {
+                articleData = JSON.parse(rawOutput);
+            } catch {
+                throw new Error('Output is not valid JSON. Try using a more structured model like Falcon or format the response manually.');
+            }
+
+            // Build markdown content
+            let fullContent = `## Introduction\n${articleData.content.introduction}\n\n`;
+            articleData.content.mainBody.forEach((section: { heading: string; text: string }) => {
+                fullContent += `## ${section.heading}\n${section.text}\n\n`;
+            });
+            fullContent += `## Conclusion\n${articleData.content.conclusion}`;
 
             return {
-                ...JSON.parse(response.data.choices[0].message.content),
-                concepts: concepts.map(c => ({ name: c.name, confidence: c.value })),
+                title: articleData.title,
+                description: articleData.metaDescription,
+                content: fullContent,
             };
-        }catch(error){
-            console.error('Error in generating the article from analyzed content of the image: ', error.message);
-            throw new InternalServerErrorException('Failed to generate content for the article');
+    
+        } catch (error) {
+            console.error('Error in generating the article from image: ', error.message);
+            throw new Error('Failed to generate content for the article');
         }
     }
 }

@@ -22,7 +22,7 @@ export class ArticlesController{
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN)
     async uploadImage(@UploadedFile() file: Express.Multer.File){
-        return await this.uploadService.uploadImage(file);
+        return await this.uploadService.uploadFile(file);
     }
 
     @Post('generate')
