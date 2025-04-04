@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    font-family: 'Poppins', sans-serif;
+  }
+  $my-primary: mat-palette($mat-indigo);
+  $my-accent:  mat-palette($mat-pink, A200, A100, A400);
+  
+  $my-theme: mat-light-theme((
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+    )
+  ));
+  
+  @include angular-material-theme($my-theme);
+    
