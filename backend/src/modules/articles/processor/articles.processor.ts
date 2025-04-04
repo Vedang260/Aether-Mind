@@ -1,6 +1,6 @@
 import { Processor, Process } from '@nestjs/bull';
 import { Job } from 'bull';
-import { AIService } from '../../../utils/services/ai.service';
+import { AIService } from '../../../utils/AI/ai.service';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Articles } from '../entities/article.entity';
