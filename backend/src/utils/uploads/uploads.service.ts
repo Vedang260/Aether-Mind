@@ -23,7 +23,20 @@ export class UploadService {
     });
   }
   
-  async uploadFile(file: Express.Multer.File): Promise<UploadApiResponse> {
-    return this.uploadImage(file);
+  async uploadFile(file: Express.Multer.File): Promise<{ success: boolean; message: string; image_url: string }> {
+    try{
+      const result = await this.uploadImage(file);
+      return { 
+        success: true,
+        message: 'Image is uploaded successfully',
+        image_url : result.secure_url };
+    }catch(error){
+      console.error('Error in uploading image to Cloudinary: ', error.message);
+      return {
+        success: false,
+        message: 'Failed to uplaod image',
+        image_url: ""
+      }
+    }
   }
 }
