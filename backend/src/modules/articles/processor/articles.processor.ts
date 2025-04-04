@@ -21,7 +21,7 @@ export class ArticleProcessor {
 
         // Generate  updated summary & tags
         article.summary = await this.aiService.generateSummary(article.content);
-        //article.tags = await this.aiService.generateTags(article.content);
+        article.tags = await this.aiService.generateTags(article.content);
 
         const articleData = { ...article} as UpdateArticleDto;
         await this.articlesRepository.updateArticle(article.article_id, articleData);
