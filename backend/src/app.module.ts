@@ -7,6 +7,8 @@ import { AuthMiddleware } from './modules/auth/middlewares/auth.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { bullConfig } from './config/queue.config';
 import { BullModule } from '@nestjs/bull';
+import { ArticlesModule } from './modules/articles/modules/articles.module';
+import { UploadModule } from './utils/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { BullModule } from '@nestjs/bull';
     }),
     AuthModule,
     UsersModule,
+    ArticlesModule,
+    UploadModule,
   ],
 })
 export class AppModule {

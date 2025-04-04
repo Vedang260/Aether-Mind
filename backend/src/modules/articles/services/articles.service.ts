@@ -4,12 +4,15 @@ import { CreateArticleDto } from "../dtos/createArticle.dto";
 import { UpdateArticleDto } from "../dtos/updateArticle.dto";
 import { Articles } from "../entities/article.entity";
 import { AIService } from "src/utils/AI/ai.service";
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class ArticlesService{
     constructor(
         private readonly articlesRepository: ArticlesRepository,
-        private readonly aiService: AIService
+        private readonly aiService: AIService,
+        @InjectQueue('article-processing') private articleQueue: Queue,
     ){}
 
     async createArticle(author_id: string, createArticleDto: Partial<CreateArticleDto>): Promise<{ success: boolean; message: string}>{
@@ -19,9 +22,18 @@ export class ArticlesService{
             
             // Call your repository function with the new object
             const newArticle = await this.articlesRepository.createArticle(articleData);
+
+            if(newArticle){
+                // Add to background processing queue
+                await this.articleQueue.add({ article_id: newArticle.article_id });
+                return {
+                    success: true,
+                    message: 'New Article is created successfully'
+                }
+            }
             return {
-                success: true,
-                message: 'New Article is created successfully'
+                success: false,
+                message: 'Failed to create a new Aricle'
             }
         }catch(error){
             console.error('Error in creating an article: ', error.message);
@@ -35,6 +47,8 @@ export class ArticlesService{
     async updateArticle(article_id: string, updateArticleDto: Partial<UpdateArticleDto>): Promise<{success: boolean; message: string;}>{
         try{
             await this.articlesRepository.updateArticle(article_id, updateArticleDto);
+            // Add to background processing queue
+            await this.articleQueue.add({ article_id: article_id });
             return {
                 success: true,
                 message: 'Your article is updated successfully'

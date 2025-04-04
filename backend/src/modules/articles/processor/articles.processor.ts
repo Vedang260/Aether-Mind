@@ -1,10 +1,7 @@
 import { Processor, Process } from '@nestjs/bull';
 import { Job } from 'bull';
 import { AIService } from '../../../utils/AI/ai.service';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Articles } from '../entities/article.entity';
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ArticlesRepository } from '../repositories/articles.repository';
 import { UpdateArticleDto } from '../dtos/updateArticle.dto';
 
