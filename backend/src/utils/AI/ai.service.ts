@@ -20,6 +20,32 @@ export class AIService {
         }
     }
 
+    async generateTags(content: string): Promise<string[]> {
+        try {
+          // Using a model specifically trained for keyword/tag extraction
+          const response = await axios.post(
+            "https://api-inference.huggingface.co/models/yanekyuk/bert-keyword-extractor",
+            { inputs: content },
+            { headers: { Authorization: `Bearer ${this.huggingFaceApiKey}` } }
+          );
+    
+          // Process the response to extract tags
+          if (response.data && Array.isArray(response.data)) {
+            // The model returns an array of objects with "word" and "score" properties
+            const keywords = response.data
+              .filter(item => item.score > 0.5) // Filter by confidence score
+              .map(item => item.word.toLowerCase()) // Convert to lowercase
+              .filter((word, index, self) => self.indexOf(word) === index); // Remove duplicates
+    
+            return keywords.slice(0, 5); // Return top 5 tags
+          }
+          return [];
+        } catch (error) {
+          console.error('Error in tag generation: ', error.message);
+          throw new InternalServerErrorException('Error in tag generation');
+        }
+    }    
+
     async analyzeImage(image_url: string){
         try{
             const response = await axios.post(
