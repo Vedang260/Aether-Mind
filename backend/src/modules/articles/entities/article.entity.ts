@@ -14,6 +14,9 @@ export class Articles {
   @Column({ type: 'uuid' })
   category_id: string;
 
+  @Column()
+  image_url: string;
+  
   @Column({ type: 'text' })
   title: string;
 

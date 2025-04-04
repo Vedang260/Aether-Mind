@@ -11,6 +11,10 @@ export class CreateArticleDto{
 
     @IsString()
     @IsNotEmpty()
+    image_url: string;
+    
+    @IsString()
+    @IsNotEmpty()
     title: string;
 
     @IsString()
