@@ -1,0 +1,72 @@
+<div class="dashboard-container">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+        </svg>
+        <h1>Aether<span>Mind</span></h1>
+      </div>
+      
+      <div class="navbar-search">
+        <mat-form-field appearance="outline" class="search-field">
+          <input matInput placeholder="Search knowledge..." type="search">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      
+      <div class="navbar-actions">
+        <button mat-icon-button class="notification-btn">
+          <mat-icon [matBadge]="3" matBadgeColor="warn">notifications</mat-icon>
+        </button>
+        <div class="user-profile">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User profile">
+        </div>
+      </div>
+    </nav>
+  
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <div class="content-header">
+        <h2>Knowledge Articles</h2>
+        <div class="filter-controls">
+          <button mat-stroked-button>
+            <mat-icon>filter_alt</mat-icon>
+            Filters
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>sort</mat-icon>
+            Sort
+          </button>
+        </div>
+      </div>
+  
+      <div class="articles-grid">
+        <!-- Article Card 1 -->
+        <div class="article-card" *ngFor="let article of articles; let i = index" [@cardAnimation]="i">
+          <div class="card-image">
+            <img [src]="article.image" [alt]="article.title">
+            <div class="card-badge">New</div>
+          </div>
+          <div class="card-content">
+            <div class="card-category">{{article.category}}</div>
+            <h3 class="card-title">{{article.title}}</h3>
+            <p class="card-description">{{article.description}}</p>
+            <!-- Add this tags container right after the description -->
+            <div class="card-tags">
+              <span class="tag" *ngFor="let tag of article.tags">{{tag}}</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-author">
+                <img [src]="article.authorAvatar" alt="Author">
+                <span>{{article.author}}</span>
+              </div>
+              <button mat-icon-button class="card-action">
+                <mat-icon>bookmark_border</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>

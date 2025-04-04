@@ -1,7 +1,7 @@
 import { HfInference, InferenceClient } from "@huggingface/inference";
 import { InternalServerErrorException } from "@nestjs/common";
 import axios from "axios";
-import OpenAI from 'openai';
+import { Model } from "clarifai-nodejs";
 
 export class AIService {
     // hugging face api key
@@ -48,6 +48,34 @@ export class AIService {
         }
     }    
 
+    async generateArticleFromImage(image_url: string){
+      try{
+        
+
+// Your PAT (Personal Access Token) can be found in the Account's Security section
+const prompt = "What’s the future of AI?";
+// You can set the model using model URL or model ID.
+const modelUrl = "https://clarifai.com/openai/chat-completion/models/gpt-4o";
+
+// Model Predict
+const model = new Model({
+  url: modelUrl,
+  authConfig: {
+    pat: "4ebff6909ecc4ccda2725ee86f578d0e",
+  },
+});
+
+
+const modelPrediction = await model.predictByBytes({
+  inputBytes: Buffer.from(prompt),
+  inputType: "text",
+});
+
+console.log(modelPrediction?.[0]?.data?.text?.raw);
+      }catch(error){
+
+      }
+    }
     // async getImageCaption(imageUrl: string){
     //     const response = await this.openai.chat.completions.create({
     //         model: "gpt-4-vision-preview",

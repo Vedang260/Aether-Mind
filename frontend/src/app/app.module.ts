@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { DashboardModule } from './features/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { MatOptionModule } from '@angular/material/core';
     HttpClientModule,
     MatSelectModule,
     MatOptionModule,
+    DashboardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

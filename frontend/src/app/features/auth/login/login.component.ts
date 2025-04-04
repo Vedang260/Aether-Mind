@@ -61,7 +61,7 @@ export class LoginComponent {
                     //console.log('Login response', response);
                     if(response.success){
                         this.notification.showSuccess(response.message);
-                        //this.router.navigate(['/dashboard']);
+                        this.router.navigate(['/dashboard']);
                     }else{
                         this.notification.showError(response.message);
                     }
