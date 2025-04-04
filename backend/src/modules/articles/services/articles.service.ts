@@ -3,10 +3,14 @@ import { ArticlesRepository } from "../repositories/articles.repository";
 import { CreateArticleDto } from "../dtos/createArticle.dto";
 import { UpdateArticleDto } from "../dtos/updateArticle.dto";
 import { Articles } from "../entities/article.entity";
+import { AIService } from "src/utils/AI/ai.service";
 
 @Injectable()
 export class ArticlesService{
-    constructor(private readonly articlesRepository: ArticlesRepository){}
+    constructor(
+        private readonly articlesRepository: ArticlesRepository,
+        private readonly aiService: AIService
+    ){}
 
     async createArticle(author_id: string, createArticleDto: Partial<CreateArticleDto>): Promise<{ success: boolean; message: string}>{
         try{
@@ -98,17 +102,20 @@ export class ArticlesService{
         }
     }
 
-    async generateArticleFromImage(image_url: string): Promise<{ success: boolean; message: string;}>{
+    async generateArticleFromImage(image_url: string): Promise<{ success: boolean; message: string; article: any}>{
         try{
+            const response = await this.aiService.generateArticleFromImage(image_url);
             return {
                 success: true,
                 message: 'Your AI-article is generated',
+                article: response
             }
         }catch(error){
             console.error('Error in generating an Article from Image using AI: ', error.message);
             return {
                 success: false,
                 message: 'Your AI-article is generated',
+                article: null
             }
         }
     }
