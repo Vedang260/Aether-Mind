@@ -97,4 +97,19 @@ export class ArticlesService{
             }
         }
     }
+
+    async generateArticleFromImage(image_url: string): Promise<{ success: boolean; message: string;}>{
+        try{
+            return {
+                success: true,
+                message: 'Your AI-article is generated',
+            }
+        }catch(error){
+            console.error('Error in generating an Article from Image using AI: ', error.message);
+            return {
+                success: false,
+                message: 'Your AI-article is generated',
+            }
+        }
+    }
 }

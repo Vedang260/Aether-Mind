@@ -19,4 +19,56 @@ export class AIService {
             throw new InternalServerErrorException('Error in summary generation');
         }
     }
+
+    async analyzeImage(image_url: string){
+        try{
+            const response = await axios.post(
+                'https://api.clarifai.com/v2/models/general-image-recognition/versions/aa7f35c01e0642fda5cf400f543e7c40/outputs',
+                {
+                    inputs: [{ data: { image: { url: image_url }}}],
+                },
+                {
+                    headers: {
+                        Authorization: `Key ${process.env.CLARIFAI_API_KEY}`
+                    },
+                },
+            );
+            return response.data;
+        }catch(error){
+            console.error('Error in analyzing an image: ', error.message);
+            throw new InternalServerErrorException('Failed to analyze your image');
+        }
+    }
+
+    async generateArticleFromImage(image_url: string){
+        try{
+            const analysis = await this.analyzeImage(image_url);
+            const concepts = analysis.outputs[0].data.concepts;
+            
+            const prompt = `Generate an innovative & structured article in JSON format with title, 1 liner description, and 
+                            detailed content such that users can find it useful, engaging and can improve their knowledge & understanding 
+                            based on: ${concepts.map(c => c.name).join(', ')}.`;
+            
+            const response = await axios.post(
+                'https://api.openai.com/v1/chat/completions',
+                {
+                model: 'gpt-3.5-turbo',
+                response_format: { type: "json_object" }, // Important for JSON output
+                messages: [
+                    { role: "system", content: "You are a helpful assistant that generates Innovative & Kowledge Based Articles containing title, description & content & outputs in JSON." },
+                    { role: "user", content: prompt }
+                ]
+                },
+                { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
+            );
+
+            return {
+                ...JSON.parse(response.data.choices[0].message.content),
+                concepts: concepts.map(c => ({ name: c.name, confidence: c.value })),
+            };
+        }catch(error){
+            console.error('Error in generating the article from analyzed content of the image: ', error.message);
+            throw new InternalServerErrorException('Failed to generate content for the article');
+        }
+    }
 }
