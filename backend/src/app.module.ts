@@ -9,6 +9,7 @@ import { bullConfig } from './config/queue.config';
 import { BullModule } from '@nestjs/bull';
 import { ArticlesModule } from './modules/articles/modules/articles.module';
 import { UploadModule } from './utils/uploads/uploads.module';
+import { CategoryModule } from './modules/articles/modules/category.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UploadModule } from './utils/uploads/uploads.module';
     AuthModule,
     UsersModule,
     ArticlesModule,
+    CategoryModule,
     UploadModule,
   ],
 })

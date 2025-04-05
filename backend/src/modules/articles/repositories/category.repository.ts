@@ -11,7 +11,7 @@ export class CategoryRepository{
             private readonly categoryRepository: Repository<Category>
         ){}
     
-    async createArticle(createCategoryDto: CreateCategoryDto): Promise<Category | null>{
+    async createCategory(createCategoryDto: CreateCategoryDto): Promise<Category | null>{
         try{
             const newCategory = this.categoryRepository.create(createCategoryDto);
             return await this.categoryRepository.save(newCategory);
