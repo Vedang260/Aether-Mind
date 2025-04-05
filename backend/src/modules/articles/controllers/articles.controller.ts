@@ -25,12 +25,12 @@ export class ArticlesController{
         return await this.uploadService.uploadFile(file);
     }
 
-    // @Post('generate')
-    // @UseGuards(RolesGuard)
-    // @Roles(UserRole.ADMIN)
-    // async generateArticleFromImage(@Body('image_url') image_url: string){
-    //     return await this.articlesService.generateArticleFromImage(image_url);
-    // }
+    @Post('generate')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async generateArticleFromImage(@Body('image_url') image_url: string){
+        return await this.articlesService.generateArticleFromImage(image_url);
+    }
 
     @Post('create')
     @UseGuards(RolesGuard)
