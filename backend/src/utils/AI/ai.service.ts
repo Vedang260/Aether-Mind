@@ -49,50 +49,50 @@ export class AIService {
     }    
 
     async generateArticleFromImage(image_url: string){
-      try{
-        // Your PAT (Personal Access Token) can be found in the Account's Security section
-        const prompt = `Analyze the given image and provide me the response in the json format 
-        containing title, description & content. Here is the image url: ${image_url}`;
-        // You can set the model using model URL or model ID.
-        const modelUrl = "https://clarifai.com/openai/chat-completion/models/gpt-4o";
+      // try{
+      //   // Your PAT (Personal Access Token) can be found in the Account's Security section
+      //   const prompt = `Analyze the given image and provide me the response in the json format 
+      //   containing title, description & content. Here is the image url: ${image_url}`;
+      //   // You can set the model using model URL or model ID.
+      //   const modelUrl = "https://clarifai.com/openai/chat-completion/models/gpt-4o";
 
-        // Model Predict
-        const model = new Model({
-          url: modelUrl,
-          authConfig: {
-            pat: "d6e0b6d4c65442049bd65edfe55a159e",
-          },
-        });
+      //   // Model Predict
+      //   const model = new Model({
+      //     url: modelUrl,
+      //     authConfig: {
+      //       pat: "d6e0b6d4c65442049bd65edfe55a159e",
+      //     },
+      //   });
 
-        // Create image input using Input class method
-        const imageInput = Input.getInputFromUrl({
-          inputId: "image-input",
-          imageUrl: image_url,
-        });
+      //   // Create image input using Input class method
+      //   const imageInput = Input.getInputFromUrl({
+      //     inputId: "image-input",
+      //     imageUrl: image_url,
+      //   });
 
-        // Create text input using Input class method
-      const textInput = Input.getTextInput({
-        inputId: "text-input",
-        text: prompt,
-      });
-        const modelPrediction = await model.predict({
-          inputs: [
-            {
-              data: {
-                image: {
-                  url: image_url,
-                },
-                text: {
-                  raw: prompt,
-                }
-              }
-        }] });
+      //   // Create text input using Input class method
+      // const textInput = Input.getTextInput({
+      //   inputId: "text-input",
+      //   text: prompt,
+      // });
+      //   const modelPrediction = await model.predict({
+      //     inputs: [
+      //       {
+      //         data: {
+      //           image: {
+      //             url: image_url,
+      //           },
+      //           text: {
+      //             raw: prompt,
+      //           }
+      //         }
+      //   }] });
 
-        console.log(modelPrediction?.[0]?.data?.text?.raw);
-      }catch(error){
-        console.error('Error in generating the article from image: ', error.message);
-        throw new Error('Failed to generate content for the article');
-      }
+      //   console.log(modelPrediction?.[0]?.data?.text?.raw);
+      // }catch(error){
+      //   console.error('Error in generating the article from image: ', error.message);
+      //   throw new Error('Failed to generate content for the article');
+      // }
     }
     // async getImageCaption(imageUrl: string){
     //     const response = await this.openai.chat.completions.create({
