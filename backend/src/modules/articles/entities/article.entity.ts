@@ -23,8 +23,20 @@ export class Articles {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'text'})
+  introduction: string;
+
+  @Column({ type: 'text', nullable: true})
+  quote: string;
+
+  @Column({ type: 'text', nullable: true})
+  did_you_know: string;
+
   @Column({ type: 'text' })
   content: string;
+
+  @Column({ type: 'text'})
+  conclusion: string;
 
   @Column({ type: 'text', nullable: true })
   summary: string;

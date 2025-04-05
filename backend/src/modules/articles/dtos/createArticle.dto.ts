@@ -23,5 +23,13 @@ export class CreateArticleDto{
     
     @IsNotEmpty()
     @IsString()
+    introduction: string;
+
+    @IsNotEmpty()
+    @IsString()
     content: string;
+
+    @IsNotEmpty()
+    @IsString()
+    conclusion: string;
 }

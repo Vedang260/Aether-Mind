@@ -20,21 +20,21 @@ export class ArticlesController{
     @Post('upload-image')
     @UseInterceptors(FileInterceptor('image'))
     @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.EDITOR)
     async uploadImage(@UploadedFile() file: Express.Multer.File){
         return await this.uploadService.uploadFile(file);
     }
 
     @Post('generate')
     @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.EDITOR)
     async generateArticleFromImage(@Body('image_url') image_url: string){
         return await this.articlesService.generateArticleFromImage(image_url);
     }
 
     @Post('create')
     @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.EDITOR)
     async createArticle(@Req() req: Request, @Body() article: Partial<CreateArticleDto>){
         return await this.articlesService.createArticle(req['user'].userId, article);
     }
@@ -46,7 +46,7 @@ export class ArticlesController{
 
     @Put(':id')
     @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.EDITOR)
     async updateArticle(@Param('id') id: string, @Body() article: Partial<UpdateArticleDto>){
         return await this.articlesService.updateArticle(id, article);
     }
