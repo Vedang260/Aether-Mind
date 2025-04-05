@@ -71,13 +71,13 @@ constructor(
         }
     }
 
-    async getAllCategories(): Promise<{success: boolean; message: string; articles: Category[] | null}> {
+    async getAllCategories(): Promise<{success: boolean; message: string; categories: Category[] | null}> {
         try{
-            const articles = await this.categoryRepository.getAllCategories();
+            const categories = await this.categoryRepository.getAllCategories();
             return {
                 success: true,
                 message: 'Explore our Categories',
-                articles: articles
+                categories: categories
             }
         }catch(error){
             console.error('Error in fetching all categories:', error.message);
