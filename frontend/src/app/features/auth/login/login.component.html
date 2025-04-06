@@ -1,58 +1,57 @@
-<div class="login-container">
-    <div class="login-background">
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-    </div>
-    
-    <div class="login-card" [@cardAnimation]>
-      <div class="login-header">
-        <div class="logo-container">
-          <svg class="logo-icon" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
-          </svg>
-          <h1>Aether<span>Mind</span></h1>
-        </div>
-        <p class="subtitle">Your Knowledge Management Portal</p>
-      </div>
-  
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required>
-          <mat-icon matSuffix>alternate_email</mat-icon>
-          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-            Email is required
-          </mat-error>
-          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-            Please enter a valid email
-          </mat-error>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Password</mat-label>
-          <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" required>
-          <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
-            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-            Password is required
-          </mat-error>
-        </mat-form-field>
-  
-        <button mat-raised-button type="submit" class="login-button" [disabled]="!loginForm.valid">
-          <span>Sign In</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-  
-        <div class="login-footer">
-          <a href="#" class="forgot-password">Forgot password?</a>
-          <p>Don't have an account? <a href="#" class="signup-link">Sign up</a></p>
-        </div>
-      </form>
-    </div>
+<div class="auth-container">
+  <div class="auth-background">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
   </div>
+  
+  <div class="auth-card" [@cardAnimation]>
+    <div class="auth-header">
+      <div class="logo-container">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+        </svg>
+        <h1>Welcome <span>Back</span></h1>
+      </div>
+      <p class="auth-subtitle">Sign in to access your knowledge base</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required>
+        <mat-icon matSuffix>alternate_email</mat-icon>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="forgot-password">
+        <a [routerLink]="['/forgot-password']">Forgot password?</a>
+      </div>
+
+      <button mat-raised-button type="submit" class="auth-button" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+      </button>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a [routerLink]="['/register']" class="auth-link">Register</a></p>
+      </div>
+    </form>
+  </div>
+</div>
