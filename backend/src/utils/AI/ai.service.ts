@@ -10,12 +10,12 @@ export class AIService {
     async generateSummary(content: string): Promise<string>{
         try{
             const response = await axios.post(
-                "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
-                { inputs: content },
-                { headers: { Authorization: `Bearer ${this.huggingFaceApiKey}` } }
-              );
+              "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+              { inputs: content },
+              { headers: { Authorization: `Bearer ${this.huggingFaceApiKey}` } }
+            );
               
-              return response.data[0]?.summary_text || "Summary unavailable";
+            return response.data[0]?.summary_text || "Summary unavailable";
         }catch(error){
             console.error('Error in summary generation: ', error.message);
             throw new InternalServerErrorException('Error in summary generation');
@@ -48,138 +48,94 @@ export class AIService {
         }
     }    
 
+    async getImageCaption(data): Promise<string>{
+      try{
+        const response = await fetch(
+          "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-large",
+          {
+            headers: {
+            Authorization: `Bearer ${this.huggingFaceApiKey}`,
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify(data),
+            }
+        );
+        const result = await response.json();
+        return result[0].generated_text;
+      }catch(error){
+          console.error('Error in image caption generation: ', error.message);
+          throw new InternalServerErrorException('Error in image caption generation');
+      }
+    }  
+    
     async generateArticleFromImage(image_url: string){
-      // try{
-      //   // Your PAT (Personal Access Token) can be found in the Account's Security section
-      //   const prompt = `Analyze the given image and provide me the response in the json format 
-      //   containing title, description & content. Here is the image url: ${image_url}`;
-      //   // You can set the model using model URL or model ID.
-      //   const modelUrl = "https://clarifai.com/openai/chat-completion/models/gpt-4o";
+      try{
+        const caption = await this.getImageCaption({ inputs: image_url });
+        const prompt = `
+          You are a professional content writer. 
+          
+          Required JSON structure:
+          {
+              "title": "A catchy, SEO-friendly title",
+              "description": "1-2 line summary",
+              "introduction": "Hook the reader with context (50-100 words)",
+              "content": "3-5 paragraphs (300-500 words) covering key aspects",
+              "conclusion": "Summarize key takeaways (50-100 words)",
+              "quote": "A relevant inspiring quote",
+              "did_you_know": "A surprising fact"
+          }
+          
+          Make the article:
+          - Well-researched & factual  
+          - Engaging & easy to read  
+          - Increase reader's knowledge  
+          - Long enough (500+ words total)  
 
-      //   // Model Predict
-      //   const model = new Model({
-      //     url: modelUrl,
-      //     authConfig: {
-      //       pat: "d6e0b6d4c65442049bd65edfe55a159e",
-      //     },
-      //   });
-
-      //   // Create image input using Input class method
-      //   const imageInput = Input.getInputFromUrl({
-      //     inputId: "image-input",
-      //     imageUrl: image_url,
-      //   });
-
-      //   // Create text input using Input class method
-      // const textInput = Input.getTextInput({
-      //   inputId: "text-input",
-      //   text: prompt,
-      // });
-      //   const modelPrediction = await model.predict({
-      //     inputs: [
-      //       {
-      //         data: {
-      //           image: {
-      //             url: image_url,
-      //           },
-      //           text: {
-      //             raw: prompt,
-      //           }
-      //         }
-      //   }] });
-
-      //   console.log(modelPrediction?.[0]?.data?.text?.raw);
-      // }catch(error){
-      //   console.error('Error in generating the article from image: ', error.message);
-      //   throw new Error('Failed to generate content for the article');
-      // }
+          Generate a detailed, engaging, and informative article in JSON format based on this image description: "${caption}".
+          And plz do not include the given prompt in the response.
+        `;
+          const response = await fetch(
+            "https://router.huggingface.co/hf-inference/models/mistralai/Mistral-7B-Instruct-v0.3",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${this.huggingFaceApiKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ inputs: prompt })
+            }
+          );
+          const result = await response.json();
+          const jsonMatch = result[0].generated_text.match(/```json([\s\S]*?)```/);
+          if (jsonMatch) {
+            const jsonString = jsonMatch[1].trim(); // Get the JSON inside the code block
+            
+            // Step 2: Parse the JSON
+            try {
+                const articleData = JSON.parse(jsonString);
+                
+                // Step 3: Access the extracted fields
+                console.log("Title:", articleData.title);
+                console.log("Description:", articleData.description);
+                console.log("Introduction:", articleData.introduction);
+                console.log("Content:", articleData.content.join("\n")); // Join paragraphs if array
+                console.log("Conclusion:", articleData.conclusion);
+                console.log("Quote:", articleData.quote);
+                console.log("Did You Know:", articleData.did_you_know);
+                
+                // Full structured JSON output
+                console.log("Full Article Data:", articleData);
+                return articleData;
+            } catch (error) {
+                console.error("❌ Failed to parse JSON:", error);
+            }
+        } else {
+            console.error("No JSON found in the response.");
+        }
+      }catch(error){
+        console.error("Error in generating Article: ", error.message);
+        throw new InternalServerErrorException("Failed to generate article using AI");
+      }
     }
-    // async getImageCaption(imageUrl: string){
-    //     const response = await this.openai.chat.completions.create({
-    //         model: "gpt-4-vision-preview",
-    //         messages: [{
-    //           role: "user",
-    //           content: [
-    //             { type: "text", text: "Analyze & Describe this image in detail." },
-    //             { type: "image_url", image_url: { url: imageUrl } },
-    //           ],
-    //         }],
-    //     });
-    //     console.log(response);
-    // }
-
-    // async generateArticleFromImage(image_url: string): Promise<{ title: string; description: string; content: string }> {
-    //     try {
-    //         const caption = await this.getImageCaption(image_url);
-    //         console.log("Image Caption: ", caption);
-    //         // Define the advanced prompt
-    //         const advancedPrompt = `
-    //             As a professional content writer with expertise in visual analysis, create a comprehensive article based on this caption: ${caption}.
-    //             **Requirements:**
-    //             1. Title: Catchy, 5-8 words, SEO-friendly
-    //             2. Description: 1-2 sentences, 150-160 characters
-    //             3. Article Content:
-    //                - Introduction (100 words): Context setting
-    //                - Main Body (500-600 words):
-    //                  * 3-5 subsections with H2 headings
-    //                  * Include relevant facts, statistics, history
-    //                  * Add cultural/social context if applicable
-    //                - Conclusion (100 words): Summary + thought-provoking ending
-    //             **Writing Style:**
-    //             - Professional yet accessible
-    //             - Engaging narrative flow
-    //             - Accurate technical details
-    //             - Include analogies for complex concepts
-    //             - Add "Did You Know?" boxes for interesting facts
-    //             **Special Instructions:**
-    //             - If the image contains people, analyze their activities/emotions
-    //             - For products/artifacts, include origin/history/usage
-    //             - For nature scenes, discuss geographical/ecological aspects
-    //             - For abstract images, provide creative interpretations
-    //             **Output Format:**
-    //             - Return as a JSON object with properties: title, description, content (object with introduction, mainBody array, conclusion)
-    //         `;
-    
-    //         const response = await axios.post(
-    //             'https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct', // You can also try 'tiiuae/falcon-7b-instruct'
-    //             { inputs: advancedPrompt },
-    //             {
-    //               headers: {
-    //                 Authorization: `Bearer ${this.huggingFaceApiKey}`,
-    //               },
-    //             },
-    //         );
-    //         //console.log("Response: ", response);
-
-    //         const rawOutput = response.data?.[0]?.generated_text;
-    //         if (!rawOutput) {
-    //             throw new Error('No article generated');
-    //         }
-
-    //         // Parse JSON if model outputs structured JSON
-    //         let articleData: any;
-    //         try {
-    //             articleData = JSON.parse(rawOutput);
-    //         } catch {
-    //             throw new Error('Output is not valid JSON. Try using a more structured model like Falcon or format the response manually.');
-    //         }
-
-    //         // Build markdown content
-    //         let fullContent = `## Introduction\n${articleData.content.introduction}\n\n`;
-    //         articleData.content.mainBody.forEach((section: { heading: string; text: string }) => {
-    //             fullContent += `## ${section.heading}\n${section.text}\n\n`;
-    //         });
-    //         fullContent += `## Conclusion\n${articleData.content.conclusion}`;
-
-    //         return {
-    //             title: articleData.title,
-    //             description: articleData.metaDescription,
-    //             content: fullContent,
-    //         };
-    
-    //     } catch (error) {
-    //         console.error('Error in generating the article from image: ', error.message);
-    //         throw new Error('Failed to generate content for the article');
-    //     }
-    // }
 }
