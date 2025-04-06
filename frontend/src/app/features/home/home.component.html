@@ -1,0 +1,131 @@
+<div class="home-container">
+    <!-- Animated Background Elements -->
+    <div class="background-elements">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+    </div>
+  
+    <!-- Main Content -->
+    <header class="home-header" [@fadeInDown]>
+      <div class="logo-container">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+        </svg>
+        <h1>Aether<span>Mind</span></h1>
+      </div>
+      <nav class="home-nav">
+        <a href="#" class="nav-link">Features</a>
+        <a href="#" class="nav-link">Solutions</a>
+        <a href="#" class="nav-link">Pricing</a>
+        <a href="#" class="nav-link">Resources</a>
+      </nav>
+      <button mat-stroked-button class="login-link" (click)="navigateToLogin()">Sign In</button>
+    </header>
+  
+    <main class="home-main">
+      <section class="hero-section">
+        <div class="hero-content" [@fadeInUp]>
+          <h2 class="hero-title">Organize. Discover. <span>Elevate.</span></h2>
+          <p class="hero-subtitle">Transform your knowledge management with AetherMind's intelligent platform designed for modern teams.</p>
+          <button mat-raised-button class="cta-button" (click)="navigateToLogin()">
+            Get Started
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="hero-image" [@fadeInRight]>
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Knowledge Management">
+        </div>
+      </section>
+  
+      <section class="features-section">
+        <h3 class="section-title" [@fadeInUp]>Why Choose AetherMind</h3>
+        <div class="features-grid">
+          <div class="feature-card" *ngFor="let feature of features; let i = index" [@staggerAnimation]="i">
+            <div class="feature-icon">
+              <mat-icon>{{feature.icon}}</mat-icon>
+            </div>
+            <h4 class="feature-title">{{feature.title}}</h4>
+            <p class="feature-description">{{feature.description}}</p>
+          </div>
+        </div>
+      </section>
+  
+      <section class="testimonial-section" [@fadeIn]>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p class="testimonial-text">"AetherMind has transformed how our team accesses and shares knowledge. The intuitive interface and powerful search have saved us countless hours."</p>
+            <div class="testimonial-author">
+              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sarah Johnson">
+              <div>
+                <h5>Sarah Johnson</h5>
+                <p>CTO, TechSolutions</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-stats">
+            <div class="stat-item">
+              <h3>10K+</h3>
+              <p>Active Users</p>
+            </div>
+            <div class="stat-item">
+              <h3>95%</h3>
+              <p>Customer Satisfaction</p>
+            </div>
+            <div class="stat-item">
+              <h3>24/7</h3>
+              <p>Support Available</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  
+    <footer class="home-footer" [@fadeIn]>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+            </svg>
+            <h1>Aether<span>Mind</span></h1>
+          </div>
+          <p class="footer-tagline">Your Knowledge Management Portal</p>
+        </div>
+        <div class="footer-links">
+          <div class="link-group">
+            <h4>Product</h4>
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">Integrations</a>
+          </div>
+          <div class="link-group">
+            <h4>Company</h4>
+            <a href="#">About Us</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact</a>
+          </div>
+          <div class="link-group">
+            <h4>Resources</h4>
+            <a href="#">Blog</a>
+            <a href="#">Help Center</a>
+            <a href="#">Community</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2023 AetherMind. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#"><mat-icon>facebook</mat-icon></a>
+          <a href="#"><mat-icon>twitter</mat-icon></a>
+          <a href="#"><mat-icon>linkedin</mat-icon></a>
+          <a href="#"><mat-icon>instagram</mat-icon></a>
+        </div>
+      </div>
+    </footer>
+  </div>
