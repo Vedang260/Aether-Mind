@@ -98,6 +98,6 @@ export class HomeComponent {
   constructor(private router: Router) {}
 
   navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/register']);
   }
 }

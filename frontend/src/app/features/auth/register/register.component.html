@@ -1,0 +1,68 @@
+<div class="auth-container">
+    <div class="auth-background">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    
+    <div class="auth-card" [@cardAnimation]>
+      <div class="auth-header">
+        <div class="logo-container">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+          </svg>
+          <h1>Create <span>Account</span></h1>
+        </div>
+        <p class="auth-subtitle">Join AetherMind to organize your knowledge</p>
+      </div>
+  
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" required>
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
+            Username is required
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('username')?.hasError('minlength')">
+            Minimum 3 characters required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required>
+          <mat-icon matSuffix>alternate_email</mat-icon>
+          <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+            Please enter a valid email
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+            Minimum 6 characters required
+          </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button type="submit" class="auth-button" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Register</span>
+          <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+        </button>
+  
+        <div class="auth-footer">
+          <p>Already have an account? <a [routerLink]="['/login']" class="auth-link">Sign in</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
