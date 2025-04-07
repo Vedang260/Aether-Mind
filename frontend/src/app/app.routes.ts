@@ -7,5 +7,9 @@ export const routes: Routes = [
     { path: 'article/:id', loadComponent: () => import('./features/article/article.component').then (m => m.ArticleComponent)},
     { path: '', pathMatch: 'full', redirectTo: 'home' },
     { path: 'home', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
-
+    // Lazy load admin module
+  {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
+  },
 ];

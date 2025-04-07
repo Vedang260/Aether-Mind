@@ -23,7 +23,7 @@ export class AppComponent {
 
   updateNavbarVisibility(url: string) {
     // Define routes where you want to show the navbar
-    const showOnRoutes = ['/dashboard', '/article'];
+    const showOnRoutes = ['/dashboard', '/article', '/admin'];
 
     // Check if the current URL starts with any of these routes
     this.showNavbar = showOnRoutes.some(route => url.startsWith(route));

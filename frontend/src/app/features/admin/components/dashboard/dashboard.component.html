@@ -1,6 +1,6 @@
 <div class="admin-dashboard">
     <div class="header">
-      <h1>Admin Dashboard</h1>
+      <h1>Admin <span>Dashboard</span></h1>
       <div class="quick-actions">
         <button mat-raised-button class="action-btn" routerLink="/admin/articles">
           <mat-icon>post_add</mat-icon>
@@ -27,7 +27,7 @@
           <mat-icon>{{stat.icon}}</mat-icon>
         </div>
         <div class="stat-content">
-          <h3>{{stat.value}}</h3>
+          <h3>{{stat.displayValue}}</h3>
           <p>{{stat.title}}</p>
         </div>
       </mat-card>

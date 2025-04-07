@@ -66,7 +66,11 @@ export class LoginComponent {
       next: (response: any) => {
         if(response.success){
             this.toastr.success('Login successful!', 'Success');
-            this.router.navigate(['/dashboard']);
+            if(response.user.role === 'admin'){
+              this.router.navigate(['/admin/dashboard']);
+            }else{
+              this.router.navigate(['/dashboard']);
+            }
         }
       },
       error: (error) => {
