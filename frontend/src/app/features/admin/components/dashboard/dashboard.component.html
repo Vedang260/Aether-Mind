@@ -1,0 +1,35 @@
+<div class="admin-dashboard">
+    <div class="header">
+      <h1>Admin Dashboard</h1>
+      <div class="quick-actions">
+        <button mat-raised-button class="action-btn" routerLink="/admin/articles">
+          <mat-icon>post_add</mat-icon>
+          Manage Articles
+        </button>
+        <button mat-raised-button class="action-btn" routerLink="/admin/categories">
+          <mat-icon>category</mat-icon>
+          Manage Categories
+        </button>
+        <button mat-raised-button class="action-btn" routerLink="/admin/analytics">
+          <mat-icon>analytics</mat-icon>
+          View Analytics
+        </button>
+        <button mat-raised-button class="action-btn" routerLink="/admin/users">
+          <mat-icon>people</mat-icon>
+          Manage Users
+        </button>
+      </div>
+    </div>
+  
+    <div class="stats-grid">
+      <mat-card class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon" [style.background]="stat.color">
+          <mat-icon>{{stat.icon}}</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{stat.value}}</h3>
+          <p>{{stat.title}}</p>
+        </div>
+      </mat-card>
+    </div>
+  </div>
