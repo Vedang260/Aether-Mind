@@ -195,7 +195,13 @@
     line-height: 1.5;
     margin: 0 0 1.5rem 0;
     flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Show only 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+  
   /* Tags styles */
 .card-tags {
   display: flex;
