@@ -39,6 +39,11 @@ export class ArticlesController{
         return await this.articlesService.createArticle(req['user'].userId, article);
     }
 
+    @Get(':id')
+    async getArticle(@Param('id') id: string){
+        return await this.articlesService.getArticle(id);
+    }
+    
     @Get()
     async getAllArticles(){
         return await this.articlesService.getAllArticles();

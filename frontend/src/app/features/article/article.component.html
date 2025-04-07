@@ -1,0 +1,101 @@
+<div class="article-container">
+    <!-- Article Header with Image -->
+    <div class="article-header">
+      <div class="article-image" [style.backgroundImage]="'url(' + article.image_url + ')'"></div>
+      <div class="article-quote">
+        <mat-icon class="quote-icon">format_quote</mat-icon>
+        <p class="quote-text">{{article.quote}}</p>
+      </div>
+    </div>
+  
+    <!-- Article Content -->
+    <div class="article-content">
+      <!-- Title and Metadata -->
+      <div class="article-meta">
+        <div class="category-tag">{{article.category}}</div>
+        <div class="publish-date">Published {{article.created_at | date}}</div>
+      </div>
+  
+      <h1 class="article-title">{{article.title}}</h1>
+  
+      <!-- Introduction -->
+      <section class="article-section">
+        <h2 class="section-title">Introduction</h2>
+        <div class="section-content" [innerHTML]="article.introduction"></div>
+      </section>
+  
+      <!-- Main Content -->
+      <section class="article-section">
+        <h2 class="section-title">Content</h2>
+        <div class="section-content" [innerHTML]="article.content"></div>
+      </section>
+  
+      <!-- Did You Know Section -->
+      <section class="article-section did-you-know">
+        <div class="did-you-know-header">
+          <mat-icon class="dyk-icon">lightbulb</mat-icon>
+          <h2 class="section-title">Did You Know?</h2>
+        </div>
+        <div class="section-content" [innerHTML]="article.did_you_know"></div>
+      </section>
+  
+      <!-- Conclusion -->
+      <section class="article-section">
+        <h2 class="section-title">Conclusion</h2>
+        <div class="section-content" [innerHTML]="article.conclusion"></div>
+      </section>
+  
+      <!-- AI Summary Button (shown only for long articles) -->
+      <div class="ai-summary-container" *ngIf="isLongArticle">
+        <button mat-raised-button class="ai-summary-button" (click)="openSummaryDialog()">
+          <mat-icon>smart_toy</mat-icon>
+          <span>Ask AI to Summarize</span>
+        </button>
+      </div>
+  
+      <!-- Tags -->
+      <div class="article-tags">
+        <span class="tag" *ngFor="let tag of article.tags">{{tag}}</span>
+      </div>
+  
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <h3 class="comments-title">Discussion</h3>
+      <div class="comment-form">
+        <textarea matInput placeholder="Share your thoughts..." [(ngModel)]="newComment"></textarea>
+        <button mat-raised-button class="comment-button" (click)="addComment()">Post Comment</button>
+      </div>
+      
+      <div class="comments-list">
+        <div class="comment" *ngFor="let comment of comments">
+          <img [src]="comment.user.avatar" alt="User" class="comment-avatar">
+          <div class="comment-content">
+            <div class="comment-header">
+              <h4 class="comment-user">{{comment.user.name}}</h4>
+              <span class="comment-date">{{comment.date | date}}</span>
+            </div>
+            <p class="comment-text">{{comment.text}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- AI Summary Dialog -->
+  <ng-template #summaryDialog>
+    <div class="ai-summary-dialog">
+      <h2 mat-dialog-title>AI Summary</h2>
+      <mat-dialog-content>
+        <div class="summary-content">
+          <p>{{aiSummary}}</p>
+        </div>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Close</button>
+        <button mat-raised-button color="primary" (click)="copySummary()">
+          <mat-icon>content_copy</mat-icon>
+          Copy
+        </button>
+      </mat-dialog-actions>
+    </div>
+  </ng-template>

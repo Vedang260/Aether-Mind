@@ -24,7 +24,7 @@
           </div>
           <div class="card-content">
             <div class="card-category">{{article.category}}</div>
-            <h3 class="card-title">{{article.title}}</h3>
+            <h3 class="article-title" [routerLink]="['/article', article.id]">{{ article.title }}</h3>
             <p class="card-description">{{article.description}}</p>
             <!-- Add this tags container right after the description -->
             <div class="card-tags">
