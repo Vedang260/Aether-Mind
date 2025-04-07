@@ -10,6 +10,7 @@ import { BullModule } from '@nestjs/bull';
 import { ArticlesModule } from './modules/articles/modules/articles.module';
 import { UploadModule } from './utils/uploads/uploads.module';
 import { CategoryModule } from './modules/articles/modules/category.module';
+import { CommentsModule } from './modules/comments/modules/comments.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CategoryModule } from './modules/articles/modules/category.module';
     UsersModule,
     ArticlesModule,
     CategoryModule,
+    CommentsModule,
     UploadModule,
   ],
 })

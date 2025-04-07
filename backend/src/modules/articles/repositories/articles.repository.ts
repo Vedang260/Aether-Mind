@@ -34,7 +34,7 @@ export class ArticlesRepository{
 
     async getArticle(article_id: string): Promise<Articles | null>{
         try{
-            return await this.articlesRepository.findOne({ where: {article_id } });
+            return await this.articlesRepository.findOne({ where: {article_id }});
         }catch(error){
             console.error('Error in fetching an article: ', error.message);
             throw new InternalServerErrorException('Error in fetching an article');

@@ -72,9 +72,9 @@
           <div class="comment-content">
             <div class="comment-header">
               <h4 class="comment-user">{{comment.user.name}}</h4>
-              <span class="comment-date">{{comment.date | date}}</span>
+              <span class="comment-date">{{comment.created_at | date}}</span>
             </div>
-            <p class="comment-text">{{comment.text}}</p>
+            <p class="comment-text">{{comment.content}}</p>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@
       <h2 mat-dialog-title>AI Summary</h2>
       <mat-dialog-content>
         <div class="summary-content">
-          <p>{{aiSummary}}</p>
+          <p>{{article.summary}}</p>
         </div>
       </mat-dialog-content>
       <mat-dialog-actions align="end">

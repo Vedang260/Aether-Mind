@@ -41,7 +41,18 @@ export class CommentsRepository{
 
     async getAllCommentsForArticle(article_id: string): Promise<Comments[]>{
         try{
-            return await this.commentsRepository.findBy({ article_id });
+            const comments = await this.commentsRepository
+            .createQueryBuilder('comments')
+            .leftJoinAndSelect('comments.user', 'user')
+            .where('comments.article_id = :articleId', { articleId: article_id })
+            .select([
+                'comments.comment_id',
+                'comments.content',
+                'comments.created_at',
+                'user.username',
+            ])
+            .getMany();
+            return comments;
         }catch(error){
             console.error('Error in fetching the comments: ', error.message);
             throw new InternalServerErrorException('Error in fetching the comments');
