@@ -42,7 +42,8 @@ export class ArticleComponent implements OnInit {
 
   newComment = '';
   isLongArticle = true;
-
+  animatedSummary: string = '';
+  isTyping: boolean = false;
   ngOnInit(): void {
     // In a real app, you would fetch the article data based on ID from a service
     const articleId = this.route.snapshot.paramMap.get('id');
@@ -86,6 +87,27 @@ export class ArticleComponent implements OnInit {
       }
 }
 
+openSummaryWithTyping(summaryText: string) {
+    this.startTypingSummary(summaryText); // Start the typing effect
+    this.openSummaryDialog(); // Open the dialog
+}
+
+startTypingSummary(summaryText: string) {
+    this.animatedSummary = '';
+    this.isTyping = true;
+    let index = 0;
+  
+    const typingInterval = setInterval(() => {
+      if (index < summaryText.length) {
+        this.animatedSummary += summaryText.charAt(index);
+        index++;
+      } else {
+        clearInterval(typingInterval);
+        this.isTyping = false;
+      }
+    }, 50); // typing speed in ms
+  }
+  
   openSummaryDialog() {
     this.dialog.open(this.summaryDialog, {
       width: '600px',

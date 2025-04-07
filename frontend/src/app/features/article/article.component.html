@@ -47,10 +47,10 @@
   
       <!-- AI Summary Button (shown only for long articles) -->
       <div class="ai-summary-container" *ngIf="isLongArticle">
-        <button mat-raised-button class="ai-summary-button" (click)="openSummaryDialog()">
-          <mat-icon>smart_toy</mat-icon>
-          <span>Ask AI to Summarize</span>
-        </button>
+        <button mat-raised-button class="ai-summary-button" (click)="openSummaryWithTyping(article.summary)">
+            <mat-icon>smart_toy</mat-icon>
+            <span>Ask AI to Summarize</span>
+          </button>          
       </div>
   
       <!-- Tags -->
@@ -84,11 +84,12 @@
   <!-- AI Summary Dialog -->
   <ng-template #summaryDialog>
     <div class="ai-summary-dialog">
-      <h2 mat-dialog-title>AI Summary</h2>
+      <h2 mat-dialog-title>✨AI Summary</h2>
       <mat-dialog-content>
-        <div class="summary-content">
-          <p>{{article.summary}}</p>
-        </div>
+        <div class="ai-summary-content" *ngIf="animatedSummary">
+            <h2>{{ article.title}}</h2>
+            <p>{{ animatedSummary }}<span *ngIf="isTyping" class="typing-cursor">|</span></p>
+          </div>
       </mat-dialog-content>
       <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Close</button>

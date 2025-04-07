@@ -399,3 +399,17 @@
       flex-wrap: wrap;
     }
   }
+
+  .typing-cursor {
+    display: inline-block;
+    width: 1px;
+    background-color: black;
+    animation: blink 1s steps(2, start) infinite;
+  }
+  
+  @keyframes blink {
+    to {
+      visibility: hidden;
+    }
+  }
+  
