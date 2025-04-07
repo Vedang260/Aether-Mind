@@ -129,24 +129,13 @@ startTypingSummary(summaryText: string) {
         const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`
         });
-        const comment = {articleId, content: this.newComment}
-        this.http.post<any>(`http://localhost:8000/api/comments/create`, comment, { headers })
+        const comment = {article_id: articleId, content: this.newComment}
+        this.http.post<any>(`http://localhost:8000/api/comments/create`, {comment}, { headers })
         .subscribe({
           next: (response) => {
             if (response.success) {
               // Add the new comment to the top of the list
-              this.comments.unshift({
-                user: {
-                  name: response.comment.user.username, // ✅ Take from response
-                  avatar: 'https://randomuser.me/api/portraits/men/1.jpg' // Later you can make this dynamic
-                },
-                content: response.comment.content,
-                created_at: response.comment.created_at
-              });
-              this.newComment = '';
-              this.snackBar.open('Comment posted!', 'Close', {
-                duration: 2000
-              });
+              this.ngOnInit()
             }
           },
           error: (err) => {
