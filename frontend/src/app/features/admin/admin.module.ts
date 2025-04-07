@@ -23,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { QuillModule } from 'ngx-quill';
+import { CategoriesComponent } from './components/categories/categories.component';
 
 @NgModule({
   declarations: [
@@ -50,8 +51,7 @@ import { QuillModule } from 'ngx-quill';
     BaseChartDirective,
     QuillModule.forRoot(),
     DashboardComponent,
-    
-    // CategoriesComponent,
+    CategoriesComponent,
     // ArticlesComponent,
     // AnalyticsComponent,
     // UsersComponent

@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.categories-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px);
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  color: #2a2e35;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.header h1 span {
+  color: #a777e3;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 5px rgba(110, 142, 251, 0.2);
+  border: none;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(110, 142, 251, 0.3);
+}
+
+.categories-table {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #2a2e35;
+  text-align: left;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.icon-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-display mat-icon {
+  color: #6e8efb;
+  background: rgba(110, 142, 251, 0.1);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.edit-btn {
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  color: #6e8efb;
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  color: #e53935;
+  transform: scale(1.1);
+}
+
+/* Dialog Styles */
+.custom-dialog {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.dialog-form {
+  padding: 1.5rem;
+}
+
+.dialog-form h2 {
+  color: #2a2e35;
+  margin-top: 0;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-form mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.icon-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  border-radius: 8px;
+  padding: 0 1.5rem;
+}
+
+/* Snackbar Styles */
+.custom-snackbar {
+  background: #2a2e35;
+  color: white;
+  border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .categories-container {
+    padding: 1.5rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-container {
+    padding: 1rem;
+  }
+  
+  .categories-table {
+    padding: 0.5rem;
+  }
+  
+  th, td {
+    padding: 0.75rem 0.5rem;
+  }
+}
