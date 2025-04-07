@@ -1,0 +1,229 @@
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 70px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .navbar-brand:hover {
+    transform: translateX(-3px);
+  }
+  
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+    color: #6e8efb;
+  }
+  
+  .navbar-brand h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+  
+  .navbar-brand h1 span {
+    color: #a777e3;
+  }
+  /* Navbar Search Container */
+.navbar-search {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+    position: relative;
+  }
+  
+  /* Search Field Styles */
+  .search-field {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-field:hover,
+  .search-field:focus-within {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  /* Material Field Outline */
+  .mat-form-field-outline {
+    background-color: transparent;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid #dcdfe3;
+  }
+  
+  .mat-form-field-outline:hover {
+    border-color: #a8c0ff;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #6e8efb;
+    border-color: #6e8efb;
+  }
+  
+  /* Placeholder animation (advanced working trick) */
+  .search-field .mat-input-element::placeholder {
+    transition: opacity 0.5s ease;
+    opacity: 0.7;
+  }
+  
+  /* Simulated placeholder changing effect */
+  .navbar-search::after {
+    content: 'Search by title...';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+    animation: placeholderSlide 12s infinite;
+    font-size: 0.95rem;
+  }
+  
+  /* Hide default placeholder text visually but keep accessible */
+  .search-field .mat-input-element::placeholder {
+    color: transparent;
+  }
+  
+  /* Keyframes for animated placeholder */
+  @keyframes placeholderSlide {
+    0%, 20% {
+      content: 'Search by title...';
+    }
+    25%, 45% {
+      content: 'Search by tags...';
+    }
+    50%, 70% {
+      content: 'Search by category...';
+    }
+    75%, 95% {
+      content: 'Search by author...';
+    }
+  }
+  
+  
+  /* User profile styles */
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .user-profile:hover {
+    background-color: rgba(110, 142, 251, 0.1);
+  }
+  
+  .user-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+  
+  .user-profile:hover img {
+    border-color: #6e8efb;
+  }
+  
+  .username {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Dropdown menu styles */
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #6e8efb;
+  }
+  
+  .dropdown-item mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 0 1rem;
+    }
+    
+    .navbar-search {
+      margin: 0 1rem;
+      display: none; /* Hide search on mobile */
+    }
+    
+    .username {
+      display: none; /* Hide username on mobile */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .navbar-brand h1 {
+      font-size: 1.2rem;
+    }
+  }
