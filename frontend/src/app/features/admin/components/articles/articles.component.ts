@@ -12,7 +12,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { QuillModule } from 'ngx-quill';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CategoryResponse } from '../../../../shared/models/category.model';
 import { ApiResponse } from '../../../../shared/models/articles.model';
 import { catchError, forkJoin, map, of } from 'rxjs';
@@ -72,12 +72,12 @@ export class ArticlesComponent implements OnInit {
   };
   isLoading: boolean | undefined;
   error: string | undefined;
-  http: any;
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient
   ) {
     this.articleForm = this.fb.group({
       categoryId: ['', Validators.required],
@@ -258,5 +258,11 @@ forkJoin([articlesRequest, categoriesRequest])
   deleteArticle(id: number) {
     this.articles = this.articles.filter(a => a.id !== id);
     this.showSnackbar('Article deleted successfully!');
+  }
+
+  private getCategoryName(categoryId: string): string {
+    if (!this.categories || !categoryId) return 'Uncategorized';
+    const category = this.categories.find(c => c.category_id === categoryId);
+    return category ? category.name : 'Uncategorized';
   }
 }

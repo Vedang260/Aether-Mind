@@ -53,7 +53,7 @@ import { ArticlesComponent } from './components/articles/articles.component';
     QuillModule.forRoot(),
     DashboardComponent,
     CategoriesComponent,
-   // ArticlesComponent,
+    ArticlesComponent,
     // AnalyticsComponent,
     // UsersComponent
   ]
