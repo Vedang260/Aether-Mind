@@ -59,4 +59,27 @@ export class ArticlesRepository{
             throw new InternalServerErrorException('Error in deleting an article: ');
         }
     }
+
+    async getTotalArticles(): Promise<number>{
+        try{
+            return await this.articlesRepository.count();
+        }catch(error){
+            console.error('Error in counting total Articles: ', error.message);
+            throw new InternalServerErrorException('Error in counting total Articles: ');
+        }
+    }
+
+    async getTotalViewsCount(): Promise<number>{
+        try{
+            const result = await this.articlesRepository
+            .createQueryBuilder('article')
+            .select('SUM(article.views_count)', 'total')
+            .getRawOne();
+
+            return Number(result.total) || 0;
+        }catch(error){
+            console.error('Error in counting total Viewes: ', error.message);
+            throw new InternalServerErrorException('Error in counting total Viewes: ');
+        }
+    }
 }

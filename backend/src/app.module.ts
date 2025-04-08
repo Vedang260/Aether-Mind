@@ -13,6 +13,7 @@ import { CategoryModule } from './modules/articles/modules/category.module';
 import { CommentsModule } from './modules/comments/modules/comments.module';
 import { ElasticSearchCustomModule } from './modules/search/search.module';
 import { RatingsModule } from './modules/comments/modules/ratings.module';
+import { AnalyticsModule } from './modules/analytics/modules/analytics.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RatingsModule } from './modules/comments/modules/ratings.module';
     CategoryModule,
     CommentsModule,
     RatingsModule,
+    AnalyticsModule,
     UploadModule,
   ],
 })

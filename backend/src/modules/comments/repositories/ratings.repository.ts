@@ -29,5 +29,4 @@ export class RatingsRepository{
             throw new InternalServerErrorException('Error in fetching the rating');
         }
     }
-
 }
