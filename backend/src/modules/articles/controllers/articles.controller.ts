@@ -8,13 +8,15 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { UserRole } from "src/common/enums/roles.enum";
 import { CreateArticleDto } from "../dtos/createArticle.dto";
 import { UpdateArticleDto } from "../dtos/updateArticle.dto";
+import { SearchService } from "src/modules/search/search.service";
 
 @Controller('/articles')
 @UseGuards(JwtAuthGuard)
 export class ArticlesController{
     constructor(
         private readonly articlesService: ArticlesService,
-        private uploadService: UploadService
+        private uploadService: UploadService,
+        private searchService: SearchService
     ){}
 
     @Post('upload-image')
@@ -61,5 +63,12 @@ export class ArticlesController{
     @Roles(UserRole.ADMIN)
     async deleteArticle(@Param('id') id: string){
         return await this.articlesService.deleteArticle(id);
+    }
+
+    @Get(':id/related')
+    async getRelated(@Param('id') id: string) {
+        const response = await this.articlesService.getArticle(id);
+        if(response.article)
+            return this.searchService.getRelatedArticles(response.article);
     }
 }

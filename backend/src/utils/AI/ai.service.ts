@@ -27,7 +27,7 @@ export class AIService {
         try {
           // Using a model specifically trained for keyword/tag extraction
           const response = await fetch(
-            "https://router.huggingface.co/hf-inference/models/fabiochiu/t5-base-tag-generation",
+            "https://api-inference.huggingface.co/models/fabiochiu/t5-base-tag-generation",
             {
               headers: {
                 Authorization: `Bearer ${this.huggingFaceApiKey}`,

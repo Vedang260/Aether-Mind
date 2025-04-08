@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.17.1",
     "@huggingface/inference": "^3.6.2",
     "@nestjs/bull": "^11.0.2",
     "@nestjs/common": "^11.0.1",

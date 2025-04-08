@@ -11,6 +11,7 @@ import { ArticlesModule } from './modules/articles/modules/articles.module';
 import { UploadModule } from './utils/uploads/uploads.module';
 import { CategoryModule } from './modules/articles/modules/category.module';
 import { CommentsModule } from './modules/comments/modules/comments.module';
+import { ElasticSearchCustomModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CommentsModule } from './modules/comments/modules/comments.module';
       useFactory: bullConfig,
       inject: [ConfigService],
     }),
+    ElasticSearchCustomModule,
     AuthModule,
     UsersModule,
     ArticlesModule,

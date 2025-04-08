@@ -6,12 +6,14 @@ import { Articles } from "../entities/article.entity";
 import { AIService } from "src/utils/AI/ai.service";
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { SearchService } from "src/modules/search/search.service";
 
 @Injectable()
 export class ArticlesService{
     constructor(
         private readonly articlesRepository: ArticlesRepository,
         private readonly aiService: AIService,
+        private readonly searchService: SearchService,
         @InjectQueue('article-processing') private articleQueue: Queue,
     ){}
 
@@ -24,6 +26,8 @@ export class ArticlesService{
             const newArticle = await this.articlesRepository.createArticle(articleData);
 
             if(newArticle){
+                //calling search service to index new article
+                await this.searchService.indexArticle(newArticle);
                 // Add to background processing queue
                 await this.articleQueue.add({ article_id: newArticle.article_id });
                 return {
@@ -47,6 +51,11 @@ export class ArticlesService{
     async updateArticle(article_id: string, updateArticleDto: Partial<UpdateArticleDto>): Promise<{success: boolean; message: string;}>{
         try{
             await this.articlesRepository.updateArticle(article_id, updateArticleDto);
+
+            const updatedArticle = await this.articlesRepository.getArticle(article_id);           
+            
+            if(updatedArticle)
+                await this.searchService.indexArticle(updatedArticle);
             // Add to background processing queue
             await this.articleQueue.add({ article_id: article_id });
             return {
@@ -65,6 +74,7 @@ export class ArticlesService{
     async deleteArticle(article_id: string): Promise<{success: boolean; message: string; }>{
         try{
             const res = await this.articlesRepository.deleteArticle(article_id);
+            await this.searchService.removeFromIndex(article_id);
             if(res){
                 return {
                     success: true,

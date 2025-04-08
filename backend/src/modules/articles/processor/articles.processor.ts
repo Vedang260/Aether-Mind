@@ -4,12 +4,15 @@ import { AIService } from '../../../utils/AI/ai.service';
 import { NotFoundException } from '@nestjs/common';
 import { ArticlesRepository } from '../repositories/articles.repository';
 import { UpdateArticleDto } from '../dtos/updateArticle.dto';
+import { SearchService } from 'src/modules/search/search.service';
 
 @Processor('article-processing')
 export class ArticleProcessor {
+  
   constructor(
     private readonly aiService: AIService,
     private readonly articlesRepository: ArticlesRepository,
+    private readonly searchService: SearchService
   ) {}
 
   @Process()
@@ -25,6 +28,7 @@ export class ArticleProcessor {
 
         const articleData = { ...article} as UpdateArticleDto;
         await this.articlesRepository.updateArticle(article.article_id, articleData);
+        await this.searchService.indexArticle(articleData);
     }catch(error){
         console.error('Error in article processing: ', error.message);
     }

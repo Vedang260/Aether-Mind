@@ -1,7 +1,6 @@
 export const elasticSearchConfig = {
-    node: process.env.BONSAI_URL,
-    auth: {
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
-    },
+    node: process.env.ELASTIC_CLOUD_ID as string,
+  auth: {
+    apiKey: process.env.PASSWORD as string
+  }
 };

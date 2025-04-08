@@ -8,6 +8,8 @@ import { AIService } from 'src/utils/AI/ai.service';
 import { BullModule } from '@nestjs/bull';
 import { UploadModule } from 'src/utils/uploads/uploads.module';
 import { ArticleProcessor } from '../processor/articles.processor';
+import { SearchService } from 'src/modules/search/search.service';
+import { ElasticSearchCustomModule } from 'src/modules/search/search.module';
 
 @Module({
   imports: [
@@ -15,14 +17,15 @@ import { ArticleProcessor } from '../processor/articles.processor';
     BullModule.registerQueue({
         name: 'article-processing',
     }),
-    UploadModule
+    UploadModule,
+    ElasticSearchCustomModule
   ],
   controllers: [ArticlesController],
   providers: [
     ArticlesService,
     ArticlesRepository,
     ArticleProcessor,
-    AIService,
+    AIService
   ],
   exports: [ArticlesService, ArticlesRepository, AIService],
 })
