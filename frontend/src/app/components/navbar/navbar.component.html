@@ -7,10 +7,25 @@
     </div>
     
     <div class="navbar-search">
-        <mat-form-field class="search-field" appearance="outline">
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput placeholder="Search..." />
-        </mat-form-field>
+      <mat-form-field class="search-field" appearance="fill">
+        <mat-icon matPrefix>search</mat-icon>
+        <input 
+          matInput 
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+          placeholder="Search articles..."
+          aria-label="Search articles"
+        />
+        <button 
+          mat-icon-button 
+          matSuffix 
+          *ngIf="searchQuery" 
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
     </div>
     
     <div class="navbar-actions">

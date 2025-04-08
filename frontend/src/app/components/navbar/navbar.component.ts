@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-//import { UserService } from '../../core/services/user.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -14,37 +15,68 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   showDropdown = false;
-  currentPlaceholder = 'Search by title...';
+  searchQuery = '';
   user: any = null;
+  private destroy$ = new Subject<void>();
+  private placeholderInterval: any;
+  currentPlaceholder = 'Search by title...';
   placeholders = [
     'Search by title...',
     'Search by tags...',
     'Search by category...',
     'Search by author...'
   ];
-  private placeholderInterval: any;
 
   constructor(
     private authService: AuthService,
-    //private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.startPlaceholderRotation();
-    //this.user = this.userService.getCurrentUser();
     const storedUser = localStorage.getItem('auth_user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
+    
+    // Setup search debounce
+    this.setupSearchDebounce();
   }
 
-  startPlaceholderRotation() {
+  private setupSearchDebounce(): void {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(query => {
+      this.handleSearch(query);
+    });
+  }
+
+  private searchSubject = new Subject<string>();
+
+  onSearch(): void {
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  handleSearch(query: string): void {
+    // Implement your search logic here
+    console.log('Searching for:', query);
+    // You can emit this to a parent component or handle it here
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchSubject.next('');
+  }
+
+  startPlaceholderRotation(): void {
     let index = 0;
     this.placeholderInterval = setInterval(() => {
       index = (index + 1) % this.placeholders.length;
@@ -52,24 +84,26 @@ export class NavbarComponent implements OnInit {
     }, 3000);
   }
 
-  toggleDropdown() {
+  toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
   }
 
-  viewProfile() {
+  viewProfile(): void {
     this.showDropdown = false;
     this.router.navigate(['/profile']);
   }
 
-  logout() {
+  logout(): void {
     this.showDropdown = false;
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.placeholderInterval) {
       clearInterval(this.placeholderInterval);
     }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
