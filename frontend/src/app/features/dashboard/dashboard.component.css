@@ -102,15 +102,25 @@
   
   .filter-controls {
     display: flex;
-    gap: 1rem;
+    gap: 10px;
   }
   
   .filter-controls button {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #666;
-    border-radius: 8px;
+  }
+  
+  .filter-controls mat-icon[svgIcon="close"] {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .mat-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   /* Articles grid styles */
@@ -320,3 +330,100 @@
       grid-template-columns: 1fr;
     }
   }
+
+/* Filter Button Styles */
+.filter-button {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Category Grid Menu Styles */
+.category-grid-menu {
+  width: 600px;
+  max-height: 70vh;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.menu-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-header h3 {
+  margin: 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.category-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 12px;
+  padding: 20px;
+  max-height: calc(70vh - 120px);
+  overflow-y: auto;
+}
+
+.category-grid-container button {
+  padding: 12px 16px;
+  text-align: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #e0e0e0;
+  background: #f9f9f9;
+  font-size: 14px;
+  min-width: 0; /* Allows text truncation */
+}
+
+.category-grid-container button:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.category-grid-container button.active {
+  background: #3f51b5;
+  color: white;
+  border-color: #3f51b5;
+  box-shadow: 0 2px 8px rgba(63, 81, 181, 0.3);
+}
+
+.menu-footer {
+  padding: 12px 24px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.menu-footer button {
+  color: #3f51b5;
+  font-weight: 500;
+}
+
+/* Scrollbar styling */
+.category-grid-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.category-grid-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.category-grid-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.category-grid-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

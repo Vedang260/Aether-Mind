@@ -12,6 +12,7 @@ import { ApiResponse } from '../../shared/models/articles.model';
 import { Category, CategoryResponse } from '../../shared/models/category.model';
 import { RouterModule } from '@angular/router';
 import { SearchService } from '../../core/services/search.service';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,8 @@ import { SearchService } from '../../core/services/search.service';
     MatFormFieldModule,
     MatInputModule,
     MatBadgeModule,
-    RouterModule
+    RouterModule,
+    MatMenuModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
@@ -42,6 +44,8 @@ import { SearchService } from '../../core/services/search.service';
 })
 export class DashboardComponent implements OnInit, OnDestroy{
   articles: any[] = [];
+  selectedCategory: string | null = null;
+  filteredArticles: any[] = [];
   categories: Category[] = []; 
   isLoading: boolean | undefined;
   error: string | undefined;
@@ -114,14 +118,17 @@ export class DashboardComponent implements OnInit, OnDestroy{
             description: article.description,
             tags: article.tags,
             category: this.getCategoryName(article.category_id),
+            category_id: article.category_id,
             image: article.image_url,
             author: 'Unknown Author', // You can implement author lookup similarly
             authorAvatar: 'https://randomuser.me/api/portraits/men/1.jpg'
           }));
         })
+        
       ).subscribe({
         next: (mappedArticles) => {
           this.articles = mappedArticles;
+          this.filteredArticles = [...mappedArticles];
           this.isLoading = false;
         },
         error: (err) => {
@@ -131,9 +138,26 @@ export class DashboardComponent implements OnInit, OnDestroy{
       });
     }
   
-    // Helper method to get category name from ID
-    private getCategoryName(categoryId: string): string {
-      const category = this.categories.find(c => c.category_id === categoryId);
-      return category ? category.name : 'Uncategorized';
-    }
+   // Add these methods to your component class
+// In your component class
+filterByCategory(categoryId: string | null): void {
+  this.selectedCategory = categoryId;
+  if (!categoryId) {
+    this.filteredArticles = [...this.articles];
+  } else {
+    this.filteredArticles = this.articles.filter(article => article.category_id === categoryId);
+  }
+}
+
+clearCategoryFilter(): void {
+  this.filteredArticles = [...this.articles];
+  this.selectedCategory = null;
+}
+
+// Make getCategoryName public since it's used in the template
+getCategoryName(categoryId: string): string {
+  const category = this.categories.find(c => c.category_id === categoryId);
+  return category ? category.name : 'Uncategorized';
+}
+
 }

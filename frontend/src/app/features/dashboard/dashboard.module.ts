@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule, // ✅ Required for <mat-form-field>
     MatSelectModule, // ✅ Required for <mat-select>
     MatOptionModule, // ✅ Required for <mat-option>
-    MatButtonModule // ✅ Required for <button mat-raised-button>
+    MatButtonModule,
+    MatMenuModule // ✅ Required for <button mat-raised-button>
   ],
   exports: [DashboardComponent]
 })

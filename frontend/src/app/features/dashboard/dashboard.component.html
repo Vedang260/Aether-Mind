@@ -4,20 +4,35 @@
       <div class="content-header">
         <h2>Knowledge Articles</h2>
         <div class="filter-controls">
-          <button mat-stroked-button>
+          <button mat-stroked-button [matMenuTriggerFor]="categoryMenu" class="filter-button">
             <mat-icon>filter_alt</mat-icon>
-            Filters
+            {{ selectedCategory ? 'Category: ' + getCategoryName(selectedCategory) : 'Filters' }}
+            <mat-icon *ngIf="selectedCategory" >close</mat-icon>
           </button>
-          <button mat-stroked-button>
-            <mat-icon>sort</mat-icon>
-            Sort
-          </button>
+          <mat-menu #categoryMenu="matMenu" class="category-grid-menu">
+            <div class="menu-header">
+              <h3>Filter by Category</h3>
+            </div>
+            <div class="category-grid-container">
+              <button mat-stroked-button *ngFor="let category of categories" 
+                      (click)="filterByCategory(category.category_id)"
+                      [class.active]="selectedCategory === category.category_id">
+                {{ category.name }}
+              </button>
+            </div>
+            <div class="menu-footer">
+              <button mat-button (click)="filterByCategory(null)">
+                <mat-icon>clear_all</mat-icon>
+                Clear Filters
+              </button>
+            </div>
+          </mat-menu>
         </div>
       </div>
   
       <div class="articles-grid">
         <!-- Article Card 1 -->
-        <div class="article-card" *ngFor="let article of articles; let i = index" [@cardAnimation]="i">
+        <div class="article-card" *ngFor="let article of filteredArticles; let i = index" [@cardAnimation]="i">
           <div class="card-image">
             <img [src]="article.image" [alt]="article.title">
             <div class="card-badge">New</div>
