@@ -12,6 +12,7 @@ import { UploadModule } from './utils/uploads/uploads.module';
 import { CategoryModule } from './modules/articles/modules/category.module';
 import { CommentsModule } from './modules/comments/modules/comments.module';
 import { ElasticSearchCustomModule } from './modules/search/search.module';
+import { RatingsModule } from './modules/comments/modules/ratings.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ElasticSearchCustomModule } from './modules/search/search.module';
     ArticlesModule,
     CategoryModule,
     CommentsModule,
+    RatingsModule,
     UploadModule,
   ],
 })

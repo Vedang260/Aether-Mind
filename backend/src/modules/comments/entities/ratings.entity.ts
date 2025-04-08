@@ -3,7 +3,7 @@ import { User } from '../../users/entities/users.entity';
 import { Articles } from '../../articles/entities/article.entity';
 
 @Entity({ name: 'ratings' })
-export class Rating {
+export class Ratings {
   @PrimaryGeneratedColumn('uuid')
   rating_id: string;
 
