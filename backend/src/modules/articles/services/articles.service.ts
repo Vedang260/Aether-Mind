@@ -24,12 +24,16 @@ export class ArticlesService{
             
             // Call your repository function with the new object
             const newArticle = await this.articlesRepository.createArticle(articleData);
-
+            
             if(newArticle){
+                const article = await this.articlesRepository.getArticle(newArticle.article_id);
+
                 //calling search service to index new article
-                await this.searchService.indexArticle(newArticle);
+                await this.searchService.indexArticle(article);
+
                 // Add to background processing queue
                 await this.articleQueue.add({ article_id: newArticle.article_id });
+                
                 return {
                     success: true,
                     message: 'New Article is created successfully'

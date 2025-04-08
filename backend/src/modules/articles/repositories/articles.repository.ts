@@ -36,7 +36,7 @@ export class ArticlesRepository{
         try{
             // updates the view count whenever any user viewes any particular article
             await this.updateViewCount(article_id);
-            return await this.articlesRepository.findOne({ where: {article_id }});
+            return await this.articlesRepository.findOne({ where: {article_id }, relations: ['category'] });
 
         }catch(error){
             console.error('Error in fetching an article: ', error.message);

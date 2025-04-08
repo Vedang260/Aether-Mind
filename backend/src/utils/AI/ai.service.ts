@@ -48,7 +48,6 @@ export class AIService {
           .filter(tag => tag.length > 0);
 
           return tags;
-          return []
         } catch (error) {
           console.error('Error in tag generation: ', error.message);
           throw new InternalServerErrorException('Error in tag generation');

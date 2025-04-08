@@ -1,18 +1,12 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { DataSource } from "typeorm";
+import { DashboardAnalyticsDto } from "../dtos/dashboardAnalytics.dto";
 
 @Injectable()
 export class AnalyticsRepository{
     constructor(private readonly dataSource: DataSource) {}
 
-    async getAdminDashboardStats(): Promise<{
-        totalArticles: number;
-        totalViews: number;
-        totalCategories: number;
-        totalComments: number;
-        totalRatings: number;
-        totalUsers: number;
-    }> {
+    async getAdminDashboardStats(): Promise<DashboardAnalyticsDto> {
         try {
             const result = await this.dataSource.query(`
                 SELECT
@@ -39,4 +33,6 @@ export class AnalyticsRepository{
             throw new InternalServerErrorException('Error in fetching analytics stats');
         }
     }
+
+    //async getArticleAnalytics()
 }

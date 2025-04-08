@@ -21,7 +21,7 @@ export class SearchService {
         description: article.description,
         content: article.content,
         tags: article.tags,
-        category: article.category,
+        category: article.category?.name,
       },
     });
   }
