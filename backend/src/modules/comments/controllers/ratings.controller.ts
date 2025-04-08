@@ -5,6 +5,7 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { UserRole } from "src/common/enums/roles.enum";
 import { CreateCommentDto } from "../dtos/createComment.dto";
 import { RatingsService } from "../services/ratings.service";
+import { CreateRatingDto } from "../dtos/createRating.dto";
 
 @Controller('/ratings')
 @UseGuards(JwtAuthGuard)
@@ -16,7 +17,7 @@ export class RatingsController{
     @Post('create')
     @UseGuards(RolesGuard)
     @Roles(UserRole.VIEWER)
-    async createRating(@Req() req: Request, @Body('rating') rating: Partial<CreateCommentDto>){
+    async createRating(@Req() req: Request, @Body() rating: Partial<CreateRatingDto>){
         return await this.ratingsService.createRating(req['user'].userId, rating);
     }
 

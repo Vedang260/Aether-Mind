@@ -1,9 +1,7 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { CreateCommentDto } from "../dtos/createComment.dto";
-import { Comments } from "../entities/comments.entity";
 import { RatingsRepository } from "../repositories/ratings.repository";
 import { CreateRatingDto } from "../dtos/createRating.dto";
-import { Ratings } from "../entities/ratings.entity";
+
 
 @Injectable()
 export class RatingsService{
