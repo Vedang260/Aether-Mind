@@ -50,16 +50,17 @@ export class DashboardComponent implements OnInit{
   ngOnInit(): void {
     this.fetchArticlesAndCategories();
   }
+
     fetchArticlesAndCategories(): void {
       const token = localStorage.getItem('auth_token');
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`
       });
-  
+
       // Create requests for both articles and categories
       const articlesRequest = this.http.get<ApiResponse>('http://localhost:8000/api/articles', { headers });
       const categoriesRequest = this.http.get<CategoryResponse>('http://localhost:8000/api/category', { headers });
-  
+
       // Use forkJoin to make both requests simultaneously
       forkJoin([articlesRequest, categoriesRequest]).pipe(
         catchError(error => {
@@ -72,10 +73,10 @@ export class DashboardComponent implements OnInit{
           if (!articlesRes.success || !categoriesRes.success) {
             throw new Error(articlesRes.message || categoriesRes.message || 'Failed to load data');
           }
-  
+
           // Store categories for later use
           this.categories = categoriesRes.categories;
-  
+
           // Map articles to the format your template expects
           return articlesRes.articles.map(article => ({
             id: article.article_id,

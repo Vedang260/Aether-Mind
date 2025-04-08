@@ -24,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { QuillModule } from 'ngx-quill';
 import { CategoriesComponent } from './components/categories/categories.component';
+import { ArticlesComponent } from './components/articles/articles.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
     QuillModule.forRoot(),
     DashboardComponent,
     CategoriesComponent,
-    // ArticlesComponent,
+   // ArticlesComponent,
     // AnalyticsComponent,
     // UsersComponent
   ]

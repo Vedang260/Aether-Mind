@@ -43,7 +43,7 @@ export class ArticlesRepository{
 
     async getAllArticles(): Promise<Articles[]>{
         try{
-            return await this.articlesRepository.find();
+            return await this.articlesRepository.find({ relations: ['category']});
         }catch(error){
             console.error('Error in fetching the articles: ', error.message);
             throw new InternalServerErrorException('Error in fetching the articles');
