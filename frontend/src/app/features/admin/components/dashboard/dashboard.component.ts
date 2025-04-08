@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { dashboardAnalytics } from '../../../../shared/models/dashboardAnalytics.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,16 +21,46 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  stats = [
-    { icon: 'article', title: 'Total Articles', value: 1248, displayValue: '0', color: 'linear-gradient(135deg, #6e8efb, #a777e3)' },
-    { icon: 'category', title: 'Total Categories', value: 12, displayValue: '0', color: 'linear-gradient(135deg, #4CAF50, #8BC34A)' },
-    { icon: 'people', title: 'Total Users', value: 5672, displayValue: '0', color: 'linear-gradient(135deg, #FF9800, #FFC107)' },
-    { icon: 'comment', title: 'Total Comments', value: 8341, displayValue: '0', color: 'linear-gradient(135deg, #9C27B0, #E91E63)' },
-    { icon: 'visibility', title: 'Total Views', value: 124856, displayValue: '0', color: 'linear-gradient(135deg, #00BCD4, #03A9F4)' }
-  ];
+  analytics: dashboardAnalytics | null = null;
+  stats: any[] = [];
+
+  constructor( private http: HttpClient ){}
 
   ngOnInit() {
-    this.animateCounters();
+    this.fetchAnalytics();
+  }
+
+  fetchAnalytics(): any {
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.http.get<any>('http://localhost:8000/api/analytics', { headers })
+    .subscribe({
+      next: (response) => {
+        if (response?.success && response?.analytics) {
+          this.analytics = response.analytics;
+          this.initializeStats();
+          this.animateCounters();
+        } else {
+          console.error('Unexpected response format', response);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching analytics:', error);
+      }
+    });
+  }
+
+  initializeStats() {
+    this.stats = [
+      { icon: 'article', title: 'Total Articles', value: this.analytics?.totalArticles, displayValue: '0', color: 'linear-gradient(135deg, #6e8efb, #a777e3)' },
+      { icon: 'category', title: 'Total Categories', value: this.analytics?.totalCategories, displayValue: '0', color: 'linear-gradient(135deg, #4CAF50, #8BC34A)' },
+      { icon: 'people', title: 'Total Users', value: this.analytics?.totalUsers, displayValue: '0', color: 'linear-gradient(135deg, #FF9800, #FFC107)' },
+      { icon: 'comment', title: 'Total Comments', value: this.analytics?.totalComments, displayValue: '0', color: 'linear-gradient(135deg, #9C27B0, #E91E63)' },
+      { icon: 'visibility', title: 'Total Views', value: this.analytics?.totalViews, displayValue: '0', color: 'linear-gradient(135deg, #00BCD4, #03A9F4)' }
+    ];
   }
 
   animateCounters() {
