@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { trigger, transition, style, animate, stagger, query } from '@angular/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,10 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, forkJoin, map, of } from 'rxjs';
+import { catchError, forkJoin, map, of, Subject, takeUntil } from 'rxjs';
 import { ApiResponse } from '../../shared/models/articles.model';
 import { Category, CategoryResponse } from '../../shared/models/category.model';
 import { RouterModule } from '@angular/router';
+import { SearchService } from '../../core/services/search.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,16 +40,45 @@ import { RouterModule } from '@angular/router';
     ])
   ]
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit, OnDestroy{
   articles: any[] = [];
   categories: Category[] = []; 
   isLoading: boolean | undefined;
   error: string | undefined;
+  searchResults: any[] = [];
+  private destroy$ = new Subject<void>();
+  
+  constructor(
+    private http: HttpClient, 
+    private searchService: SearchService
+  ) {}
 
-  constructor(private http: HttpClient) {}
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   
   ngOnInit(): void {
     this.fetchArticlesAndCategories();
+    this.searchService.searchQuery$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(query => {
+        if (query.trim()) {
+          this.searchArticles(query.trim());
+        } else {
+          this.searchResults = [];
+        }
+      });
+  }
+
+  private searchArticles(query: string): void {
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+
+    this.http.get<any>(`http://localhost:8000/api/search?q=${query}`, { headers })
+      .subscribe(response => {
+        this.searchResults = response.articles;
+      });
   }
 
     fetchArticlesAndCategories(): void {

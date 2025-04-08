@@ -13,8 +13,8 @@
           matInput 
           [(ngModel)]="searchQuery"
           (input)="onSearch()"
-          placeholder="Search articles..."
-          aria-label="Search articles"
+          placeholder="{{ currentPlaceholder }}"
+          (ngModelChange)="searchSubject.next($event)"
         />
         <button 
           mat-icon-button 

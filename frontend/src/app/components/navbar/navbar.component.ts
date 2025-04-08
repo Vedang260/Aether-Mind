@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { SearchService } from '../../core/services/search.service';
 
 @Component({
   selector: 'app-navbar',
@@ -37,7 +38,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private searchService: SearchService
   ) {}
 
   ngOnInit() {
@@ -59,16 +61,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  private searchSubject = new Subject<string>();
+  public searchSubject = new Subject<string>();
 
+  private handleSearch(query: string): void{
+    this.searchService.setSearchQuery(query);
+  }
   onSearch(): void {
     this.searchSubject.next(this.searchQuery);
-  }
-
-  handleSearch(query: string): void {
-    // Implement your search logic here
-    console.log('Searching for:', query);
-    // You can emit this to a parent component or handle it here
   }
 
   clearSearch(): void {
