@@ -34,7 +34,10 @@ export class ArticlesRepository{
 
     async getArticle(article_id: string): Promise<Articles | null>{
         try{
+            // updates the view count whenever any user viewes any particular article
+            await this.updateViewCount(article_id);
             return await this.articlesRepository.findOne({ where: {article_id }});
+
         }catch(error){
             console.error('Error in fetching an article: ', error.message);
             throw new InternalServerErrorException('Error in fetching an article');
@@ -60,26 +63,13 @@ export class ArticlesRepository{
         }
     }
 
-    async getTotalArticles(): Promise<number>{
+    async updateViewCount(article_id: string): Promise<boolean>{
         try{
-            return await this.articlesRepository.count();
+            await this.articlesRepository.increment({ article_id }, 'views', 1);
+            return true;
         }catch(error){
-            console.error('Error in counting total Articles: ', error.message);
-            throw new InternalServerErrorException('Error in counting total Articles: ');
-        }
-    }
-
-    async getTotalViewsCount(): Promise<number>{
-        try{
-            const result = await this.articlesRepository
-            .createQueryBuilder('article')
-            .select('SUM(article.views_count)', 'total')
-            .getRawOne();
-
-            return Number(result.total) || 0;
-        }catch(error){
-            console.error('Error in counting total Viewes: ', error.message);
-            throw new InternalServerErrorException('Error in counting total Viewes: ');
+            console.error('Error in updating view count: ', error.message);
+            throw new InternalServerErrorException('Error in updating view count: ');   
         }
     }
 }
