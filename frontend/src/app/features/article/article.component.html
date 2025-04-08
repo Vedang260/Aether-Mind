@@ -17,7 +17,7 @@
       </div>
   
       <h1 class="article-title">{{article.title}}</h1>
-  
+      
       <!-- Introduction -->
       <section class="article-section">
         <h2 class="section-title">Introduction</h2>
@@ -58,6 +58,22 @@
         <span class="tag" *ngFor="let tag of article.tags">{{tag}}</span>
       </div>
   
+       <!-- Rating Section -->
+       <div class="rating-section">
+        <div class="stars-container" (mouseleave)="onStarHover(null)">
+          <mat-icon 
+            *ngFor="let star of [1,2,3,4,5]" 
+            (click)="!userRating && setRating(star)"
+            (mouseenter)="!userRating && onStarHover(star)"
+            [style.color]="getStarColor(star)"
+            [class.disabled-star]="userRating"
+            style="cursor: pointer;">
+            star
+          </mat-icon>
+        </div>
+        <p class="rating-message">{{ratingMessage}}</p>
+      </div>
+      
     <!-- Comments Section -->
     <div class="comments-section">
       <h3 class="comments-title">Discussion</h3>
