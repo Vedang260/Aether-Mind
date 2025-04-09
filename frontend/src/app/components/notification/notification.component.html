@@ -1,0 +1,18 @@
+<div @notificationAnimation 
+     class="notification-container"
+     [class]="colorClass">
+  <div class="notification-content">
+    <mat-icon class="notification-icon">{{icon}}</mat-icon>
+    <div class="notification-message">
+      <ng-container *ngIf="template; else defaultMessage">
+        <ng-container *ngTemplateOutlet="template"></ng-container>
+      </ng-container>
+      <ng-template #defaultMessage>
+        {{notification.message}}
+      </ng-template>
+    </div>
+    <button mat-icon-button class="notification-close" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

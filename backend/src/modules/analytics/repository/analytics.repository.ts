@@ -34,5 +34,7 @@ export class AnalyticsRepository{
         }
     }
 
-    //async getArticleAnalytics()
+    async getArticleAnalytics(){
+        
+    }
 }

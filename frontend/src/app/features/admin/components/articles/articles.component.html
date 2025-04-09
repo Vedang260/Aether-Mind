@@ -8,20 +8,21 @@
     </div>
   
     <div class="articles-grid">
-      <mat-card class="article-card" *ngFor="let article of articles">
+      <!-- Article Card 1 -->
+      <div class="article-card" *ngFor="let article of filteredArticles; let i = index" [@cardAnimation]="i">
         <div class="card-image">
           <img [src]="article.image" [alt]="article.title">
-          <div class="card-badge">
-            {{article.category}}
-          </div>
-          <div class="card-views">
-            <mat-icon>visibility</mat-icon>
-            {{article.views | number}}
-          </div>
+          <div class="card-badge">New</div>
         </div>
-        <mat-card-content>
-          <h3>{{article.title}}</h3>
-          <p>{{article.description}}</p>
+        <div class="card-content">
+          <div class="card-category">{{article.category}}</div>
+          <h3 class="article-title" [routerLink]="['/article', article.id]">{{ article.title }}</h3>
+          <p class="card-description">{{article.description}}</p>
+          <!-- Add this tags container right after the description -->
+          <div class="card-tags">
+            <span class="tag" *ngFor="let tag of article?.tags | slice:0:5">{{ tag }}</span>
+            <span class="tag" *ngIf="article.tags.length > 5">+{{ article.tags.length - 5 }} more</span>
+          </div>            
           <div class="card-footer">
             <span class="card-date">{{article.date}}</span>
             <button mat-icon-button [matMenuTriggerFor]="articleMenu">
@@ -38,119 +39,162 @@
               </button>
             </mat-menu>
           </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
     </div>
   </div>
   
   <!-- Article Form Dialog -->
-  <ng-template #articleDialog>
-    <div class="dialog-form">
-      <h2 mat-dialog-title>
-        <mat-icon class="dialog-icon">description</mat-icon>
-        {{editingArticle ? 'Edit' : 'Create'}} Article
-      </h2>
-      <mat-dialog-content>
-        <form [formGroup]="articleForm" class="article-form">
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="category-field">
-              <mat-label>Category</mat-label>
-              <mat-select formControlName="categoryId" required>
-                <mat-option *ngFor="let category of categories" [value]="category.id">
-                  <div class="category-option">
-                    <mat-icon>{{category.icon}}</mat-icon>
-                    {{category.name}}
-                  </div>
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="articleForm.get('categoryId')?.hasError('required')">
-                Category is required
-              </mat-error>
-            </mat-form-field>
-  
-            <div class="image-upload-container">
-              <label class="upload-label">
-                <input type="file" accept="image/*" (change)="onFileChange($event)" hidden #fileInput>
-                <div class="upload-area" [class.has-image]="imagePreview">
-                  <div *ngIf="!imagePreview" class="upload-placeholder">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>Upload Featured Image</span>
-                  </div>
-                  <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image">
+<ng-template #articleDialog>
+  <div class="dialog-form">
+    <h2 mat-dialog-title>
+      <mat-icon class="dialog-icon">description</mat-icon>
+      {{ editingArticle ? 'Edit' : 'Create' }} Article
+    </h2>
+
+    <mat-dialog-content>
+      <form [formGroup]="articleForm" class="article-form">
+        <!-- Row: Category & Image Upload -->
+        <div class="form-row">
+          <!-- Category Field -->
+          <mat-form-field appearance="outline" class="category-field">
+            <mat-label>Category</mat-label>
+            <mat-select
+              formControlName="categoryId"
+              required
+              panelClass="custom-select-panel"
+            >
+              <mat-option
+                *ngFor="let category of categories"
+                [value]="category.category_id"
+              >
+                <div class="category-option">{{ category.name }}</div>
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articleForm.get('categoryId')?.hasError('required')">
+              Category is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Image Upload -->
+          <div class="image-upload-container">
+            <label class="upload-label">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFileChange($event)"
+                hidden
+                #fileInput
+              />
+              <div class="upload-area" [class.has-image]="imagePreview">
+                <div *ngIf="!imagePreview" class="upload-placeholder">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>Upload Featured Image</span>
                 </div>
-                <mat-error *ngIf="articleForm.get('image')?.invalid && articleForm.get('image')?.touched">
-                  Featured image is required
-                </mat-error>
-              </label>
-            </div>
+                <img
+                  *ngIf="imagePreview"
+                  [src]="imagePreview"
+                  class="preview-image"
+                />
+              </div>
+              <mat-error
+                *ngIf="
+                  articleForm.get('image_url')?.invalid &&
+                  articleForm.get('image_url')?.touched
+                "
+              >
+                Featured image is required
+              </mat-error>
+            </label>
           </div>
-  
-          <mat-form-field appearance="outline">
-            <mat-label>Title</mat-label>
-            <input matInput formControlName="title" required>
-            <mat-icon matPrefix>title</mat-icon>
-            <mat-error *ngIf="articleForm.get('title')?.hasError('required')">
-              Title is required
-            </mat-error>
-            <mat-error *ngIf="articleForm.get('title')?.hasError('minlength')">
-              Title must be at least 10 characters
-            </mat-error>
-          </mat-form-field>
-  
-          <mat-form-field appearance="outline">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" required rows="3"></textarea>
-            <mat-icon matPrefix>description</mat-icon>
-            <mat-error *ngIf="articleForm.get('description')?.hasError('required')">
-              Description is required
-            </mat-error>
-            <mat-error *ngIf="articleForm.get('description')?.hasError('minlength')">
-              Description must be at least 20 characters
-            </mat-error>
-          </mat-form-field>
-  
-          <div class="editor-section">
-            <label>Introduction <span class="required">*</span></label>
-            <quill-editor [modules]="quillConfig" formControlName="introduction"></quill-editor>
-            <mat-error *ngIf="articleForm.get('introduction')?.invalid && articleForm.get('introduction')?.touched">
-              Introduction is required
-            </mat-error>
-          </div>
-  
-          <div class="editor-section">
-            <label>Content <span class="required">*</span></label>
-            <quill-editor [modules]="quillConfig" formControlName="content"></quill-editor>
-            <mat-error *ngIf="articleForm.get('content')?.invalid && articleForm.get('content')?.touched">
-              Content is required
-            </mat-error>
-          </div>
-  
-          <div class="editor-section">
-            <label>Conclusion <span class="required">*</span></label>
-            <quill-editor [modules]="quillConfig" formControlName="conclusion"></quill-editor>
-            <mat-error *ngIf="articleForm.get('conclusion')?.invalid && articleForm.get('conclusion')?.touched">
-              Conclusion is required
-            </mat-error>
-          </div>
-  
-          <div class="editor-section">
-            <label>Did You Know</label>
-            <quill-editor [modules]="quillConfig" formControlName="didYouKnow"></quill-editor>
-          </div>
-  
-          <mat-form-field appearance="outline">
-            <mat-label>Quote</mat-label>
-            <textarea matInput formControlName="quote" rows="2"></textarea>
-            <mat-icon matPrefix>format_quote</mat-icon>
-          </mat-form-field>
-        </form>
-      </mat-dialog-content>
-      <mat-dialog-actions align="end">
-        <button mat-stroked-button mat-dialog-close>Cancel</button>
-        <button mat-raised-button color="primary" (click)="saveArticle()" [disabled]="articleForm.invalid">
-          <mat-icon>{{editingArticle ? 'save' : 'add'}}</mat-icon>
-          {{editingArticle ? 'Update' : 'Create'}}
-        </button>
-      </mat-dialog-actions>
-    </div>
-  </ng-template>
+        </div>
+
+        <!-- Title Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" required />
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-error *ngIf="articleForm.get('title')?.hasError('required')">
+            Title is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Description Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" required rows="3"></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-error *ngIf="articleForm.get('description')?.hasError('required')">
+            Description is required
+          </mat-error>
+          <mat-error *ngIf="articleForm.get('description')?.hasError('minlength')">
+            Description must be at least 20 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Introduction</mat-label>
+          <textarea matInput formControlName="introduction" required rows="3"></textarea>
+          <mat-icon matPrefix>introduction</mat-icon>
+          <mat-error *ngIf="articleForm.get('introduction')?.hasError('required')">
+            Introduction is required
+          </mat-error>
+          <mat-error *ngIf="articleForm.get('introduction')?.hasError('minlength')">
+            Introduction must be at least 20 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Content</mat-label>
+          <textarea matInput formControlName="content" required rows="3"></textarea>
+          <mat-icon matPrefix>content</mat-icon>
+          <mat-error *ngIf="articleForm.get('content')?.hasError('required')">
+            Content is required
+          </mat-error>
+          <mat-error *ngIf="articleForm.get('content')?.hasError('minlength')">
+            Content must be at least 20 characters
+          </mat-error>
+        </mat-form-field>
+
+       <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="conclusion" required rows="3"></textarea>
+          <mat-icon matPrefix>conclusion</mat-icon>
+          <mat-error *ngIf="articleForm.get('conclusion')?.hasError('required')">
+            Conclusion is required
+          </mat-error>
+          <mat-error *ngIf="articleForm.get('conclusion')?.hasError('minlength')">
+            Conclusion must be at least 20 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Did You Know?</mat-label>
+          <textarea matInput formControlName="didYouKnow" required rows="3"></textarea>
+          <mat-icon matPrefix>didYouKnow?</mat-icon>
+          <mat-error *ngIf="articleForm.get('didYouKnow')?.hasError('required')">
+            Did You Know? is required
+          </mat-error>
+          <mat-error *ngIf="articleForm.get('didYouKnow')?.hasError('minlength')">
+            Did You Know? must be at least 20 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Quote</mat-label>
+          <textarea matInput formControlName="quote" rows="2"></textarea>
+          <mat-icon matPrefix>format_quote</mat-icon>
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button color="warn" (click)="dialogRef?.close()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" (click)="saveArticle()">
+        {{ editingArticle ? 'Update' : 'Create' }}
+      </button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

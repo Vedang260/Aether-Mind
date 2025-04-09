@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +49,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -65,7 +67,7 @@ export class LoginComponent {
     this.authService.login(email, password).subscribe({
       next: (response: any) => {
         if(response.success){
-            this.toastr.success('Login successful!', 'Success');
+            
             if(response.user.role === 'admin'){
               this.router.navigate(['/admin/dashboard']);
             }else{

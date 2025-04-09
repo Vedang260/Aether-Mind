@@ -24,3 +24,17 @@ body {
     color: var(--accent-color);
   }
   
+  .notification-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    pointer-events: auto;
+  }
+  
+  .notification-overlay .mat-snack-bar-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
