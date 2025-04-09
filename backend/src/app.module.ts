@@ -15,6 +15,7 @@ import { ElasticSearchCustomModule } from './modules/search/search.module';
 import { RatingsModule } from './modules/comments/modules/ratings.module';
 import { AnalyticsModule } from './modules/analytics/modules/analytics.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

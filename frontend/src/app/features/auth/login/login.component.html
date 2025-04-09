@@ -1,56 +1,64 @@
-<div class="auth-container">
-  <div class="auth-background">
+<div class="login-container">
+  <!-- Animated Background Elements -->
+  <div class="background-elements">
     <div class="particle"></div>
     <div class="particle"></div>
     <div class="particle"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
   </div>
-  
-  <div class="auth-card" [@cardAnimation]>
-    <div class="auth-header">
+
+  <!-- Login Card -->
+  <div class="login-card" [@fadeInUp]>
+    <div class="login-header">
       <div class="logo-container">
         <svg class="logo-icon" viewBox="0 0 24 24">
           <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
         </svg>
-        <h1>Welcome <span>Back</span></h1>
+        <h1>Aether<span>Mind</span></h1>
       </div>
-      <p class="auth-subtitle">Sign in to access your knowledge base</p>
+      <p class="login-subtitle">Sign in to unlock your knowledge hub</p>
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
-      <mat-form-field appearance="outline" class="form-field">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" required>
-        <mat-icon matSuffix>alternate_email</mat-icon>
-        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+        <mat-icon matPrefix>email</mat-icon>
+        <input matInput formControlName="email" type="email" placeholder="Enter your email" required>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">
           Email is required
         </mat-error>
-        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-          Please enter a valid email
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched">
+          Please enter a valid email address
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="form-field">
+      <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
         <mat-label>Password</mat-label>
-        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" required>
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+        <mat-icon matPrefix>lock</mat-icon>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password" required>
+        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
           <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
           Password is required
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched">
+          Password must be at least 8 characters long
         </mat-error>
       </mat-form-field>
 
-      <div class="forgot-password">
-        <a [routerLink]="['/forgot-password']">Forgot password?</a>
+      <div class="form-options">
+        <a [routerLink]="['/forgot-password']" class="forgot-link">Forgot password?</a>
       </div>
 
-      <button mat-raised-button type="submit" class="auth-button" [disabled]="loginForm.invalid || isLoading">
+      <button mat-raised-button class="login-button" type="submit" [disabled]="loginForm.invalid || isLoading">
         <span *ngIf="!isLoading">Sign In</span>
         <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
       </button>
 
-      <div class="auth-footer">
-        <p>Don't have an account? <a [routerLink]="['/register']" class="auth-link">Register</a></p>
+      <div class="login-footer">
+        <p>Don't have an account? <a [routerLink]="['/register']" class="register-link">Create one now</a></p>
       </div>
     </form>
   </div>

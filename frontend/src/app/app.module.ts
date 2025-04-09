@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { DashboardModule } from './features/dashboard/dashboard.module';
 import { HomeModule } from './features/home/home.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { HomeModule } from './features/home/home.module';
     MatSelectModule,
     MatOptionModule,
     DashboardModule,
-    HomeModule
+    HomeModule,
+    NgApexchartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

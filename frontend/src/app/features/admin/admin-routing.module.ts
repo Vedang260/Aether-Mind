@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { ArticlesComponent } from './components/articles/articles.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 // import { CategoriesComponent } from './components/categories/categories.component';
 // import { ArticlesComponent } from './components/articles/articles.component';
 // import { AnalyticsComponent } from './components/analytics/analytics.component';
@@ -13,7 +14,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'categories', component: CategoriesComponent },
   { path: 'articles', component: ArticlesComponent },
-//   { path: 'analytics', component: AnalyticsComponent },
+  { path: 'analytics', component: AnalyticsComponent },
 //   { path: 'users', component: UsersComponent }
 ];
 

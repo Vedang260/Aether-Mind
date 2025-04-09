@@ -1,0 +1,88 @@
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1>Knowledge Base Analytics</h1>
+      <div class="time-filter">
+        <button (click)="setTimeRange('week')" [class.active]="timeRange === 'week'">Weekly</button>
+        <button (click)="setTimeRange('month')" [class.active]="timeRange === 'month'">Monthly</button>
+      </div>
+    </div>
+  
+    <!-- Main Grid -->
+    <div class="grid-container">
+      <!-- Article Distribution -->
+      <div class="card treemap-card">
+        <h2>Article Distribution</h2>
+        <div id="treemap-chart">
+          <apx-chart 
+            [series]="articleCountSeries"
+            [chart]="articleCountChart"
+            [colors]="['#3B82F6', '#6366F1', '#8B5CF6']"
+            [dataLabels]="{ enabled: false }"
+          ></apx-chart>
+        </div>
+      </div>
+  
+      <!-- Engagement Trends -->
+      <div class="card line-card">
+        <h2>Weekly Engagement</h2>
+        <apx-chart
+          [series]="engagementSeries"
+          [chart]="engagementChart"
+          [xaxis]="engagementXAxis"
+          [stroke]="{ curve: 'smooth', width: [2, 4] }"
+          [colors]="['#10B981', '#3B82F6']"
+        ></apx-chart>
+      </div>
+  
+      <!-- Rating Distribution -->
+      <div class="card radial-card">
+        <h2>Rating Analysis</h2>
+        <apx-chart
+          [series]="ratingSeries"
+          [chart]="ratingChart"
+          [labels]="ratingLabels"
+          [plotOptions]="{ radialBar: { offsetY: 0, hollow: { size: '30%' } } }"
+          [colors]="['#F59E0B', '#EF4444', '#10B981']"
+        ></apx-chart>
+      </div>
+  
+      <!-- Comment Activity -->
+      <div class="card heatmap-card">
+        <h2>Comment Activity</h2>
+        <apx-chart
+          [series]="heatmapSeries"
+          [chart]="heatmapChart"
+          [dataLabels]="{ enabled: false }"
+          [colors]="['#ECFDF5', '#D1FAE5', '#A7F3D0', '#6EE7B7']"
+        ></apx-chart>
+      </div>
+  
+      <!-- Top Articles -->
+      <div class="card table-card">
+        <h2>Top Performing Articles</h2>
+        <div class="article-table">
+          <div class="table-header">
+            <span>Title</span>
+            <span>Views</span>
+            <span>Engagement</span>
+          </div>
+          // And update the template usage
+<div class="table-row" *ngFor="let article of topArticles">
+  <span class="truncate">{{ article.title }}</span>
+  <span>{{ article.views }}</span>
+  <span class="sparkline">
+    <apx-chart
+      [series]="[{ data: article?.engagementData || [30,40,35,50,49,60] }]"
+      [chart]="{ sparkline: { enabled: true }, type: 'area' }"
+      [stroke]="{ curve: 'smooth', width: 2 }"
+      [fill]="{ opacity: 0.3 }"
+      width="80"
+      height="30"
+    ></apx-chart>
+  </span>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>

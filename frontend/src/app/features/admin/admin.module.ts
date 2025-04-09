@@ -25,6 +25,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { QuillModule } from 'ngx-quill';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { ArticlesComponent } from './components/articles/articles.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,7 @@ import { ArticlesComponent } from './components/articles/articles.component';
     DashboardComponent,
     CategoriesComponent,
     ArticlesComponent,
-    // AnalyticsComponent,
+    AnalyticsComponent,
     // UsersComponent
   ]
 })
