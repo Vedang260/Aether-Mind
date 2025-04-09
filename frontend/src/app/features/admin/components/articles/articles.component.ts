@@ -324,8 +324,17 @@ getCategoryName(categoryId: string): string {
   }
 
   async saveArticle() {
-    console.log("arriclelelele: ", this.articleForm);
-    
+    console.log("Article form value: ", this.articleForm.value);
+
+  // First, check if form is invalid
+  if (this.articleForm.invalid) {
+    this.snackBar.open('Please fill in all the required details', 'Close', { duration: 3000 });
+
+    // Mark all controls as touched to show validation errors
+    this.articleForm.markAllAsTouched();
+    return;
+  }
+
     // If we have a new file but no URL yet (upload in progress)
     if (this.selectedFile && !this.image_url) {
       this.snackBar.open('Please wait for image to finish uploading', 'Close', { duration: 3000 });
@@ -338,7 +347,7 @@ getCategoryName(categoryId: string): string {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  
+    
     const articleData = {
       title: formValue.title,
       description: formValue.description,
