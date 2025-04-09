@@ -25,4 +25,22 @@ export class AnalyticsService{
             }
         }
     }
+
+    async getAnalyticsDashboard() {
+        try{
+            const result = await this.analyticsRepository.getAnalyticsDashboard();
+            return {
+                success: true,
+                message: 'Dashboard Analytics are fetched successfully',
+                analytics: result
+            }
+        }catch(error){
+            console.error('Error in fetching the categorywise analytics: ', error.message);
+            return {
+                success: false,
+                message: 'Failed to fetch the categorywise dashboard analytics',
+                analytics: null
+            }
+        }
+    }
 }

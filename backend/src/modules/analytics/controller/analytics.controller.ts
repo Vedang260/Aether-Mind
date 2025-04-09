@@ -12,10 +12,18 @@ export class AnalyticsController{
         private readonly analyticsService: AnalyticsService,
     ){}
 
-    @Get()
+    @Get('categories-analytics')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async getCategoryAnalytics(){
+        return await this.analyticsService.getAnalyticsDashboard();
+    }
+
+    @Get('admin-dashboard')
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN)
     async getAllArticles(){
         return await this.analyticsService.adminDashboardAnalytics();
     }
+
 }

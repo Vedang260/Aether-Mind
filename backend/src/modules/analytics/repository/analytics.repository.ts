@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { DataSource } from "typeorm";
+import { DataSource, getRepository } from "typeorm";
 import { DashboardAnalyticsDto } from "../dtos/dashboardAnalytics.dto";
+import { Category } from "src/common/enums/category.enum";
 
 @Injectable()
 export class AnalyticsRepository{
@@ -34,7 +35,27 @@ export class AnalyticsRepository{
         }
     }
 
-    async getArticleAnalytics(){
-        
+    async getAnalyticsDashboard() {
+        try{
+            const result = await this.dataSource.query(`
+                -- 📊 Category Wise Article Count
+                SELECT
+                    c.category_id,
+                    c.name,
+                    COUNT(a.article_id) AS article_count
+                FROM categories c
+                LEFT JOIN articles a ON c.category_id = a.category_id
+                GROUP BY c.category_id, c.name
+                ORDER BY article_count DESC;`);
+            const [
+                articleCounts
+            ] = result;
+            return {
+                articleCounts
+            }
+        }catch(error){
+            console.error('Error fetching category analytics:', error.message);
+            throw new InternalServerErrorException('Error fetching category analytics');
+        }
     }
 }

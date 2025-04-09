@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
       'Authorization': `Bearer ${token}`
     });
 
-    this.http.get<any>('http://localhost:8000/api/analytics', { headers })
+    this.http.get<any>('http://localhost:8000/api/analytics/admin-dashboard', { headers })
     .subscribe({
       next: (response) => {
         if (response?.success && response?.analytics) {
