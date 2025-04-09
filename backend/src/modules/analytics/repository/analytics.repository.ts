@@ -37,21 +37,34 @@ export class AnalyticsRepository{
 
     async getAnalyticsDashboard() {
         try{
-            const result = await this.dataSource.query(`
-                -- 📊 Category Wise Article Count
-                SELECT
-                    c.category_id,
-                    c.name,
-                    COUNT(a.article_id) AS article_count
-                FROM categories c
-                LEFT JOIN articles a ON c.category_id = a.category_id
-                GROUP BY c.category_id, c.name
-                ORDER BY article_count DESC;`);
-            const [
-                articleCounts
-            ] = result;
+            const [articleCounts, viewsOverTime] = await Promise.all([
+            this.dataSource.query(
+                ` -- 📊 Category Wise Article Count
+                    SELECT
+                        c.category_id,
+                        c.name,
+                        COUNT(a.article_id) AS article_count
+                    FROM categories c
+                    LEFT JOIN articles a ON c.category_id = a.category_id
+                    GROUP BY c.category_id, c.name
+                    ORDER BY article_count DESC;
+                `),
+            this.dataSource.query(
+                `-- 📈 Category Wise Views Over Time (weekly)
+                    SELECT
+                        c.category_id,
+                        c.name,
+                        DATE_TRUNC('week', a.created_at) AS week,
+                        COALESCE(SUM(a.views), 0) AS total_views
+                    FROM categories c
+                    LEFT JOIN articles a ON c.category_id = a.category_id
+                    GROUP BY c.category_id, c.name, week
+                    ORDER BY week ASC;
+                `),
+            ]);
             return {
-                articleCounts
+                articleCounts,
+                viewsOverTime,
             }
         }catch(error){
             console.error('Error fetching category analytics:', error.message);
