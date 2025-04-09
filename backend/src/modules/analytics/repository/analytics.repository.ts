@@ -37,7 +37,7 @@ export class AnalyticsRepository{
 
     async getAnalyticsDashboard() {
         try{
-            const [articleCounts, viewsOverTime, commentHeatmap, ratingDistribution, weeklyEngagement,] = await Promise.all([
+            const [articleCounts, viewsOverTime, commentHeatmap, ratingDistribution, weeklyEngagement, topArticles,] = await Promise.all([
             this.dataSource.query(
                 ` -- 📊 Category Wise Article Count
                     SELECT
@@ -100,6 +100,24 @@ export class AnalyticsRepository{
                     GROUP BY c.category_id, c.name, week
                     ORDER BY week ASC;
                     `),
+                this.dataSource.query(
+                    ` -- 🏆 Top Articles Per Category
+                    SELECT *
+                    FROM (
+                        SELECT
+                            c.category_id,
+                            c.name AS category_name,
+                            a.article_id,
+                            a.title,
+                            a.views,
+                            a.created_at,
+                            ROW_NUMBER() OVER (PARTITION BY c.category_id ORDER BY a.views DESC) AS rn
+                        FROM categories c
+                        LEFT JOIN articles a ON c.category_id = a.category_id
+                        ORDER BY a.views
+                    ) sub
+                    WHERE rn = 1;
+                    `),
             ]);
             return {
                 articleCounts,
@@ -107,6 +125,7 @@ export class AnalyticsRepository{
                 commentHeatmap,
                 ratingDistribution,
                 weeklyEngagement,
+                topArticles,
             }
         }catch(error){
             console.error('Error fetching category analytics:', error.message);
