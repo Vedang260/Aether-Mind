@@ -1,5 +1,5 @@
 /* Container styles */
-.login-container {
+.login-container, .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +89,7 @@
 }
 
 /* Card styles */
-.login-card {
+.login-card, .register-card {
   background: white;
   border-radius: 16px;
   padding: 2.5rem;
@@ -100,13 +100,13 @@
   transition: all 0.3s ease;
 }
 
-.login-card:hover {
+.login-card:hover, .register-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 /* Header styles */
-.login-header {
+.login-header, .register-header {
   text-align: center;
   margin-bottom: 2rem;
 }
@@ -125,25 +125,25 @@
   color: #6e8efb;
 }
 
-.login-header h1 {
+.login-header h1, .register-header h1 {
   font-size: 2rem;
   font-weight: 700;
   color: #333;
   margin: 0;
 }
 
-.login-header h1 span {
+.login-header h1 span, .register-header h1 span {
   color: #a777e3;
 }
 
-.login-subtitle {
+.login-subtitle, .register-subtitle {
   font-size: 1rem;
   color: #666;
   margin: 0;
 }
 
 /* Form styles */
-.login-form {
+.login-form, .register-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -199,7 +199,7 @@
 }
 
 /* Button styles */
-.login-button {
+.login-button, .register-button {
   background: linear-gradient(135deg, #6e8efb, #a777e3);
   color: white;
   padding: 1rem;
@@ -214,13 +214,13 @@
   justify-content: center;
 }
 
-.login-button:hover:not(:disabled) {
+.login-button:hover:not(:disabled), .register-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #5d7de8, #9666d8);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(110, 142, 251, 0.4);
 }
 
-.login-button:disabled {
+.login-button:disabled, .register-button:disabled  {
   background: #ccc;
   box-shadow: none;
   cursor: not-allowed;
@@ -230,8 +230,15 @@ mat-spinner {
   margin: 0 auto;
 }
 
+mat-error {
+  color: #ef5350 !important;
+}
+
+.mat-form-field-invalid .mat-form-field-outline-thick{
+  color: #ef5350 !important; 
+}
 /* Footer styles */
-.login-footer {
+.login-footer, .register-footer {
   text-align: center;
   margin-top: 1.5rem;
   color: #666;
@@ -252,16 +259,16 @@ mat-spinner {
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
-  .login-card {
+  .login-card, .register-card {
     padding: 2rem 1.5rem;
     margin: 0 1rem;
   }
 
-  .login-header h1 {
+  .login-header h1, .register-header h1 {
     font-size: 1.5rem;
   }
 
-  .login-subtitle {
+  .login-subtitle, .register-subtitle {
     font-size: 0.875rem;
   }
 }
