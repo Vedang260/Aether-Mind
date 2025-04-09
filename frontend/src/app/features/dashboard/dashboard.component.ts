@@ -81,7 +81,8 @@ export class DashboardComponent implements OnInit, OnDestroy{
 
     this.http.get<any>(`http://localhost:8000/api/search?q=${query}`, { headers })
       .subscribe(response => {
-        this.searchResults = response.articles;
+        this.searchResults = response;
+        console.log(this.searchResults);
       });
   }
 
@@ -158,6 +159,19 @@ clearCategoryFilter(): void {
 getCategoryName(categoryId: string): string {
   const category = this.categories.find(c => c.category_id === categoryId);
   return category ? category.name : 'Uncategorized';
+}
+
+get displayedArticles() {
+  return this.searchResults?.length ? this.searchResults.map(item => ({
+    id: item.article_id,
+    title: item.title,
+    description: item.description,
+    image: item.image_url,
+    category: item.category,
+    tags: item.tags,
+    author: 'Unknown Author', // You can implement author lookup similarly
+    authorAvatar: 'https://randomuser.me/api/portraits/men/1.jpg'
+  })) : this.filteredArticles;
 }
 
 }

@@ -32,7 +32,7 @@
   
       <div class="articles-grid">
         <!-- Article Card 1 -->
-        <div class="article-card" *ngFor="let article of filteredArticles; let i = index" [@cardAnimation]="i">
+        <div class="article-card" *ngFor="let article of displayedArticles; let i = index" [@cardAnimation]="i">
           <div class="card-image">
             <img [src]="article.image" [alt]="article.title">
             <div class="card-badge">New</div>
