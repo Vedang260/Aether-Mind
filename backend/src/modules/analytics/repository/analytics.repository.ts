@@ -37,7 +37,7 @@ export class AnalyticsRepository{
 
     async getAnalyticsDashboard() {
         try{
-            const [articleCounts, viewsOverTime, commentHeatmap, ratingDistribution, weeklyEngagement, topArticles,] = await Promise.all([
+            const [articleCounts, viewsOverTime, commentHeatmap, ratingDistribution, weeklyEngagement, topArticles, comparisonMatrix] = await Promise.all([
             this.dataSource.query(
                 ` -- 📊 Category Wise Article Count
                     SELECT
@@ -118,6 +118,30 @@ export class AnalyticsRepository{
                     ) sub
                     WHERE rn = 1;
                     `),
+                    this.dataSource.query(
+                        ` -- 🌐 Comparison Matrix (views vs comments vs ratings)
+                   SELECT
+                        c.category_id,
+                        c.name,
+                        COALESCE(SUM(article_data.views), 0) AS total_views,
+                        COALESCE(SUM(article_data.total_comments), 0) AS total_comments,
+                        COALESCE(SUM(article_data.total_ratings), 0) AS total_ratings
+                    FROM categories c
+                    LEFT JOIN (
+                        SELECT
+                            a.category_id,
+                            a.article_id,
+                            a.views,
+                            COUNT(DISTINCT cm.comment_id) AS total_comments,
+                            COUNT(DISTINCT r.rating_id) AS total_ratings
+                        FROM articles a
+                        LEFT JOIN comments cm ON a.article_id = cm.article_id
+                        LEFT JOIN ratings r ON a.article_id = r.article_id
+                        GROUP BY a.category_id, a.article_id, a.views
+                    ) AS article_data ON c.category_id = article_data.category_id
+                    GROUP BY c.category_id, c.name
+                    ORDER BY total_views DESC;
+                        `),
             ]);
             return {
                 articleCounts,
@@ -126,6 +150,7 @@ export class AnalyticsRepository{
                 ratingDistribution,
                 weeklyEngagement,
                 topArticles,
+                comparisonMatrix
             }
         }catch(error){
             console.error('Error fetching category analytics:', error.message);
