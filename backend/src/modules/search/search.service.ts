@@ -42,33 +42,41 @@ export class SearchService {
   }
 
   // 🎯 Related Articles
+  // 🎯 Related Articles
   async getRelatedArticles(article: Articles, size = 5) {
     const { hits } = await this.elasticsearchService.search({
       index: this.index,
       size,
       query: {
         bool: {
-          must: [
+          should: [
             {
-              more_like_this: {
-                fields: ['title', 'content', 'tags', 'category'],
-                like: [
-                  {
-                    _id: article.article_id.toString(),
-                  },
-                ],
-                min_term_freq: 1,
-                max_query_terms: 12,
-              },
+              constant_score: {
+                boost: 2,
+                filter: {
+                  more_like_this: {
+                    fields: ['title^3', 'content', 'category^2'],
+                    like: [{ _id: article.article_id.toString() }],
+                    min_term_freq: 2,
+                    max_query_terms: 25
+                  }
+                }
+              }
             },
+            {
+              terms: {
+                tags: article.tags,
+                boost: 1.5
+              }
+            }
           ],
+          minimum_should_match: 1,
           must_not: [
-            { match: { id: article.article_id } }, // Exclude current article
-          ],
-        },
-      },
+            { ids: { values: [article.article_id.toString()] } }
+          ]
+        }
+      }
     });
-
     return hits.hits.map(hit => hit._source);
   }
 

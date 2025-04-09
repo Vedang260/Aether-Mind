@@ -93,6 +93,7 @@ export class AIService {
             Write at least 500 words in total.
             Base the article on this image description: "${caption}".
             Output only the JSON structure.
+            Do not include this prompt in the response. I just want the response
             `;
           const response = await fetch(
             "https://router.huggingface.co/hf-inference/models/mistralai/Mistral-7B-Instruct-v0.3",
@@ -107,46 +108,26 @@ export class AIService {
           );
           const result = await response.json();
           const generatedText = result[0].generated_text;
-          console.log(generatedText);
-          const prompt2 = `
-          You will receive a block of text that contains an AI-generated article in JSON-like format, but mixed with prompts and explanations.
+          // Find last opening '{' and last closing '}'
+          const startIndex = generatedText.lastIndexOf('{');
+          const endIndex = generatedText.lastIndexOf('}') + 1;
 
-          Your task is to extract and clean this into a valid JSON with the following structure:
+          if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+            const jsonString = generatedText.substring(startIndex, endIndex);
 
-          {
-            "title": "...",
-            "description": "...",
-            "introduction": "...",
-            "content": "...",
-            "conclusion": "...",
-            "quote": "...",
-            "did_you_know": "..."
+            try {
+              const jsonObject = JSON.parse(jsonString);
+              console.log("✅ Final JSON Object:", jsonObject);
+              return jsonObject;
+            } catch (parseError) {
+              console.error("❌ Error parsing JSON:", parseError.message);
+              throw new InternalServerErrorException("Failed to parse generated JSON");
+            }
+          } else {
+            console.error("❌ Could not find JSON block in the response");
+            throw new InternalServerErrorException("No JSON found in generated text");
           }
-
-          Please only return the valid JSON, without any explanations or extra textAnd .
-
-          Here is the input:
-          ${generatedText}
-              `;
-          const extractedResponse = await axios.post(
-            this.GROQ_API_URL,
-            {
-              model: 'llama3-8b-8192', // or llama3-8b-8192
-              messages: [
-                { role: 'system', content: 'You are a helpful assistant that extracts valid JSON from text. Do not include any given prompt in the output.' },
-                { role: 'user', content: prompt2 }
-              ],
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.groqApiKey}`,
-              },
-            },
-          );
-          const messageContent = extractedResponse.data.choices[0].message.content;
-          console.log(messageContent);
-      }catch(error){
+    }catch(error){
         console.error("Error in generating Article: ", error.message);
         throw new InternalServerErrorException("Failed to generate article using AI");
       }
