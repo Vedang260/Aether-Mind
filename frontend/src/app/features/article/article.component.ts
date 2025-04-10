@@ -202,6 +202,10 @@ export class ArticleComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.success) {
+            this.newComment='';
+            this.snackBar.open('Your comment is posted', 'Close', {
+              duration: 3000
+            });
             this.ngOnInit();
           }
         },
