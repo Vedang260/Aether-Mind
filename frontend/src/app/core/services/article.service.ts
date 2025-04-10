@@ -34,4 +34,8 @@ export class ArticleService {
     return this.http.post(`${this.apiUrl}/generate`, { image_url }, {headers: this.headers});
   }
 
+  deleteArticle(article_id: string): Observable<any>{
+    return this.http.delete(`${this.apiUrl}/${article_id}`, {headers: this.headers});
+  }
+
 }

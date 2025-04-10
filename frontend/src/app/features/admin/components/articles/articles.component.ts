@@ -21,6 +21,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { Subject, takeUntil } from 'rxjs';
 import { RouterModule, Router } from '@angular/router';
 import { SearchService } from '../../../../core/services/search.service';
+import { ArticleService } from '../../../../core/services/article.service';
 
 @Component({
   selector: 'app-articles',
@@ -100,7 +101,8 @@ export class ArticlesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private http: HttpClient, 
     private searchService: SearchService,
-    public router: Router
+    public router: Router,
+    private articleService: ArticleService
 
   ) {
     this.articleForm = this.fb.group({
@@ -415,9 +417,20 @@ getCategoryName(categoryId: string): string {
     });
   }
 
-  deleteArticle(id: number) {
-    this.articles = this.articles.filter(a => a.id !== id);
-    this.showSnackbar('Article deleted successfully!');
+  deleteArticle(id: string) {
+    if (confirm('Are you sure you want to delete this Article?')) {
+      this.isLoading = true;
+      this.articleService.deleteArticle(id).subscribe({
+        next: (response) => {
+          if(response.success){
+            this.showSnackbar(response.message);
+            this.fetchArticlesAndCategories(); // Refresh list
+          }else{
+            this.showSnackbar(response.message);
+          }
+        },
+      });
+    }
   }
 
 }

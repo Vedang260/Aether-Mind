@@ -44,12 +44,12 @@
             <!-- Add this tags container right after the description -->
             <div class="card-tags">
               <span class="tag" *ngFor="let tag of article?.tags | slice:0:5">{{ tag }}</span>
-              <span class="tag" *ngIf="article.tags.length > 5">+{{ article.tags.length - 5 }} more</span>
+              <span class="tag" *ngIf="article?.tags?.length > 5">+{{ article?.tags?.length - 5 }} more</span>
             </div>            
             <div class="card-footer">
               <div class="card-author">
                 <img [src]="article.authorAvatar" alt="Author">
-                <span>{{article.author}}</span>
+                <span>{{article?.author}}</span>
               </div>
               <button mat-icon-button class="card-action">
                 <mat-icon>bookmark_border</mat-icon>
