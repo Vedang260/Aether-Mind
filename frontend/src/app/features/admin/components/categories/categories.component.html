@@ -1,68 +1,97 @@
 <div class="categories-container">
-    <div class="header">
+  <!-- Animated Background -->
+  <div class="background-elements">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="header" [@fadeInUp]>
+    <div class="logo-container">
+      <svg class="logo-icon" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+      </svg>
       <h1>Manage <span>Categories</span></h1>
-      <button mat-raised-button class="add-btn" (click)="openAddCategoryDialog()">
-        <mat-icon>add</mat-icon>
-        Add Category
-      </button>
     </div>
-  
-    <div class="categories-table">
-      <table mat-table [dataSource]="categories" class="mat-elevation-z4">
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let category">{{category.category_id}}</td>
-        </ng-container>
-  
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let category">{{category.name}}</td>
-        </ng-container>
-  
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let category">
-            <button mat-icon-button class="edit-btn" (click)="editCategory(category)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button class="delete-btn" (click)="deleteCategory(category.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+    <button mat-raised-button class="add-btn" (click)="openAddCategoryDialog()" [disabled]="isLoading">
+      <mat-icon>add</mat-icon>
+      Add Category
+    </button>
+  </div>
+
+  <!-- Categories Table -->
+  <div class="categories-table" [@fadeInUp]>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z4">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let category" [@fadeIn]>#{{category.category_id}}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let category" [@fadeIn]>{{category.name}}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let category" [@fadeIn]>
+          <button mat-icon-button class="edit-btn" (click)="editCategory(category)" [disabled]="isLoading">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="delete-btn" (click)="deleteCategory(category.category_id)" [disabled]="isLoading">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Pagination -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner diameter="50"></mat-spinner>
     </div>
   </div>
-  
-  <!-- Add/Edit Category Dialog -->
-  <ng-template #categoryDialog>
-    <div class="dialog-form">
-      <h2 mat-dialog-title>{{editingCategory ? 'Edit' : 'Add'}} Category</h2>
-      <mat-dialog-content>
-        <form [formGroup]="categoryForm">
-          <mat-form-field appearance="outline">
-            <mat-label>Category Name</mat-label>
-            <input matInput formControlName="name" required>
-            <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
-              Name is required
-            </mat-error>
-            <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">
-              Minimum 3 characters required
-            </mat-error>
-          </mat-form-field>
-        </form>
-      </mat-dialog-content>
-      <mat-dialog-actions align="end">
-        <button mat-stroked-button mat-dialog-close>Cancel</button>
-        <button mat-raised-button class="save-btn" (click)="saveCategory()" [disabled]="categoryForm.invalid">
-          {{editingCategory ? 'Update' : 'Save'}}
-        </button>
-      </mat-dialog-actions>
-    </div>
-  </ng-template>
+</div>
+
+<!-- Add/Edit Category Dialog -->
+<ng-template #categoryDialog>
+  <div class="dialog-form" [@fadeInUp]>
+    <h2 mat-dialog-title>{{editingCategory ? 'Edit Category' : 'Add Category'}}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="categoryForm">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Category Name</mat-label>
+          <mat-icon matPrefix>category</mat-icon>
+          <input matInput formControlName="name" placeholder="Enter category name" required>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('required') && categoryForm.get('name')?.touched">
+            Name is required
+          </mat-error>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength') && categoryForm.get('name')?.touched">
+            Minimum 3 characters required
+          </mat-error>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('maxlength') && categoryForm.get('name')?.touched">
+            Maximum 50 characters allowed
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button mat-dialog-close [disabled]="isLoading">Cancel</button>
+      <button mat-raised-button class="save-btn" (click)="saveCategory()" [disabled]="categoryForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{editingCategory ? 'Update' : 'Save'}}</span>
+        <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+      </button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
