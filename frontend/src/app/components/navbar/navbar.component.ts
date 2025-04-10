@@ -26,6 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   showDropdown = false;
   searchQuery = '';
   user: any = null;
+  isSearchFocused = false; // Added for focus state styling
   private destroy$ = new Subject<void>();
   private placeholderInterval: any;
   currentPlaceholder = 'Search by title...';
@@ -46,8 +47,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.startPlaceholderRotation();
     const storedUser = localStorage.getItem('auth_user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
-    
-    // Setup search debounce
     this.setupSearchDebounce();
   }
 
@@ -63,9 +62,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public searchSubject = new Subject<string>();
 
-  private handleSearch(query: string): void{
+  private handleSearch(query: string): void {
     this.searchService.setSearchQuery(query);
   }
+
   onSearch(): void {
     this.searchSubject.next(this.searchQuery);
   }
@@ -73,6 +73,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   clearSearch(): void {
     this.searchQuery = '';
     this.searchSubject.next('');
+  }
+
+  onFocus(): void {
+    this.isSearchFocused = true;
+  }
+
+  onBlur(): void {
+    this.isSearchFocused = false;
   }
 
   startPlaceholderRotation(): void {

@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
 /* Import Quill editor theme */
 @import 'quill/dist/quill.snow.css';
 @import 'quill/dist/quill.bubble.css';
@@ -38,3 +38,5 @@ body {
     box-shadow: none !important;
     overflow: visible !important;
   }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

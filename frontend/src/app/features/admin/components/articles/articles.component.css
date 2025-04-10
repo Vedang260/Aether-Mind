@@ -501,4 +501,9 @@ mat-dialog-content {
 
 mat-menu {
   z-index: 1001 !important;
+  
+}
+
+mat-menu-item{
+  color:var(--secondary-color)
 }
