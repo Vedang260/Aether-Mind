@@ -27,6 +27,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { ArticlesComponent } from './components/articles/articles.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { NewArticleComponent } from '../../components/article/new-article.component';
+import { ArticleAnalyticsComponent } from './components/article-analytics/article-analytics.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +58,9 @@ import { NewArticleComponent } from '../../components/article/new-article.compon
     CategoriesComponent,
     ArticlesComponent,
     AnalyticsComponent,
-    NewArticleComponent
-    // UsersComponent
+    NewArticleComponent,
+    // UsersComponent,
+    ArticleAnalyticsComponent
   ]
 })
 export class AdminModule { }

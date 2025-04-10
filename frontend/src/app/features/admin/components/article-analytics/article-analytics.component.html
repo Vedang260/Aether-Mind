@@ -1,0 +1,107 @@
+<div class="article-analytics-container">
+    <!-- Animated Background -->
+    <div class="background-elements">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+    </div>
+  
+    <!-- Header -->
+    <div class="analytics-header" [@fadeInUp]>
+      <div class="logo-container">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+        </svg>
+        <h1>Article <span>Analytics</span></h1>
+      </div>
+    </div>
+  
+    <!-- Metrics Cards -->
+    <div class="metrics-grid" [@fadeInUp]>
+        <mat-card class="metric-card views-card">
+          <mat-icon>visibility</mat-icon>
+          <div class="metric-content">
+            <span class="metric-value">{{ analyticsData.totalViews || 0 }}</span>
+            <span class="metric-label">Total Views</span>
+          </div>
+        </mat-card>
+        <mat-card class="metric-card comments-card">
+          <mat-icon>comment</mat-icon>
+          <div class="metric-content">
+            <span class="metric-value">{{ analyticsData.totalComments || 0 }}</span>
+            <span class="metric-label">Total Comments</span>
+          </div>
+        </mat-card>
+        <mat-card class="metric-card ratings-card">
+          <mat-icon>star</mat-icon>
+          <div class="metric-content">
+            <span class="metric-value">{{ analyticsData.totalPeopleRated || 0 }}</span>
+            <span class="metric-label">People Rated</span>
+          </div>
+        </mat-card>
+      </div>
+  
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <!-- Comment Heatmap -->
+      <div class="card" [@fadeInUp]>
+        <h2>Comment Activity</h2>
+        <apx-chart
+          [series]="commentHeatmapSeries"
+          [chart]="commentHeatmapChart"
+          [colors]="['#10b981', '#34d399', '#6ee7b7', '#a7f3d0']"
+          [dataLabels]="{ enabled: true, style: { colors: ['#333'] } }"
+          [title]="{ text: 'Comments by Day', align: 'center', style: { color: '#333' } }"
+        ></apx-chart>
+      </div>
+  
+      <!-- Rating Distribution -->
+      <div class="card" [@fadeInUp]>
+        <h2>Rating Distribution</h2>
+        <apx-chart
+          [series]="ratingSeries"
+          [chart]="ratingChart"
+          [labels]="ratingLabels"
+          [colors]="['#f59e0b', '#ef4444', '#10b981', '#3b82f6']"
+          [plotOptions]="{ radialBar: { hollow: { size: '50%' }, dataLabels: { show: true, name: { show: true }, value: { show: true } } } }"
+          [title]="{ text: 'Rating Percentages', align: 'center', style: { color: '#333' } }"
+        ></apx-chart>
+      </div>
+  
+      <!-- Weekly Engagement -->
+      <div class="card" [@fadeInUp]>
+        <h2>Weekly Engagement</h2>
+        <apx-chart
+          [series]="engagementSeries"
+          [chart]="engagementChart"
+          [xaxis]="engagementXAxis"
+          [colors]="['#a777e3', '#f59e0b']"
+          [stroke]="{ curve: 'smooth', width: [3, 3] }"
+          [dataLabels]="{ enabled: false }"
+          [legend]="{ position: 'top' }"
+          [title]="{ text: 'Comments & Ratings', align: 'center', style: { color: '#333' } }"
+        ></apx-chart>
+      </div>
+  
+      <!-- Comparison Matrix -->
+      <div class="card" [@fadeInUp]>
+        <h2>Engagement Matrix</h2>
+        <apx-chart
+          [series]="comparisonMatrixSeries"
+          [chart]="comparisonMatrixChart"
+          [colors]="['#ef4444']"
+          [xaxis]="{ title: { text: 'Views' } }"
+          [yaxis]="{ title: { text: 'Comments' } }"
+          [title]="{ text: 'Views vs Comments', align: 'center', style: { color: '#333' } }"
+          [markers]="{ size: 6 }"
+        ></apx-chart>
+      </div>
+    </div>
+  
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </div>

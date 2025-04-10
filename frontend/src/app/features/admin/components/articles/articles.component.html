@@ -21,23 +21,29 @@
           <!-- Add this tags container right after the description -->
           <div class="card-tags">
             <span class="tag" *ngFor="let tag of article?.tags | slice:0:5">{{ tag }}</span>
-            <span class="tag" *ngIf="article.tags.length > 5">+{{ article.tags.length - 5 }} more</span>
+            <span class="tag" *ngIf="article?.tags?.length > 5">+{{ article?.tags?.length - 5 }} more</span>
           </div>            
           <div class="card-footer">
             <span class="card-date">{{article.date}}</span>
-            <button mat-icon-button [matMenuTriggerFor]="articleMenu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #articleMenu="matMenu">
-              <button mat-menu-item [routerLink]="['/admin/edit-article', article.id]">
-                <mat-icon>edit</mat-icon>
-                <span>Edit</span>
+            <div class="menu-container">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
               </button>
-              <button mat-menu-item (click)="deleteArticle(article.id)" class="delete-item">
-                <mat-icon>delete</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item [routerLink]="['/admin/edit-article', article.id]">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="deleteArticle(article.id)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+                <button mat-menu-item [routerLink]="['/admin/article-analytics', article.id]">
+                  <mat-icon>bar_chart</mat-icon>
+                  <span>Analytics</span>
+                </button>
+              </mat-menu>
+            </div>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { ArticlesComponent } from './components/articles/articles.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { NewArticleComponent } from '../../components/article/new-article.component';
+import { ArticleAnalyticsComponent } from './components/article-analytics/article-analytics.component';
 // import { CategoriesComponent } from './components/categories/categories.component';
 // import { ArticlesComponent } from './components/articles/articles.component';
 // import { AnalyticsComponent } from './components/analytics/analytics.component';
@@ -17,8 +18,9 @@ const routes: Routes = [
   { path: 'articles', component: ArticlesComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'new-article', component: NewArticleComponent},
-  { path: 'edit-article/:id', component: NewArticleComponent }
-//   { path: 'users', component: UsersComponent }
+  { path: 'edit-article/:id', component: NewArticleComponent },
+//   { path: 'users', component: UsersComponent },
+  { path: 'article-analytics/:id', component: ArticleAnalyticsComponent}
 ];
 
 @NgModule({

@@ -493,3 +493,12 @@ mat-dialog-content {
   overflow-y: auto;
   padding: 16px 0;
 }
+
+.menu-container {
+  position: relative;
+  z-index: 1000;
+}
+
+mat-menu {
+  z-index: 1001 !important;
+}
