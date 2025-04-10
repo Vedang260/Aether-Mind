@@ -4,3 +4,17 @@ export interface User{
     password?:  string;
     role?: string;
 }
+
+
+export interface Users{
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+}
+
+export interface UsersResponse{
+    success: boolean;
+    message: string;
+    users: Users[];
+}

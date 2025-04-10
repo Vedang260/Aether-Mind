@@ -6,6 +6,7 @@ import { ArticlesComponent } from './components/articles/articles.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { NewArticleComponent } from '../../components/article/new-article.component';
 import { ArticleAnalyticsComponent } from './components/article-analytics/article-analytics.component';
+import { UsersComponent } from './components/users/users.component';
 // import { CategoriesComponent } from './components/categories/categories.component';
 // import { ArticlesComponent } from './components/articles/articles.component';
 // import { AnalyticsComponent } from './components/analytics/analytics.component';
@@ -19,7 +20,7 @@ const routes: Routes = [
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'new-article', component: NewArticleComponent},
   { path: 'edit-article/:id', component: NewArticleComponent },
-//   { path: 'users', component: UsersComponent },
+  { path: 'users', component: UsersComponent },
   { path: 'article-analytics/:id', component: ArticleAnalyticsComponent}
 ];
 

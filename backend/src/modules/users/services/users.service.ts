@@ -43,11 +43,23 @@ export class UsersService {
     return this.usersRepository.createUser(createUserDto);
   }
 
-  async removeUser(id: string): Promise<void> {
-    const result = await this.usersRepository.deleteUser(id);
+  async removeUser(id: string): Promise<{ success: boolean, message: string}> {
+    try{
+      const result = await this.usersRepository.deleteUser(id);
     
     if (!result) {
       throw new NotFoundException(`User with ID "${id}" not found`);
+    }
+    return{
+      success: true,
+      message: 'User is deleted'
+    }
+    }catch(error){
+       console.error('Error in deleting the user');
+       return{
+        success: false,
+        message: 'User is deleted successfully'
+       }
     }
   }
 } 

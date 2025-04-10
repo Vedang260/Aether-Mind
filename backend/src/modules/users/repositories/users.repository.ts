@@ -1,8 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from '../entities/users.entity';
 import { CreateUserDto } from '../dtos/createUser.dto';
+import { UserRole } from 'src/common/enums/roles.enum';
 
 
 @Injectable()
@@ -47,7 +48,12 @@ export class UsersRepository{
     // get all users
     async findAll(): Promise<User[]> {
       try{
-        return this.userRepository.find();
+        return this.userRepository.find({
+            select: ['id', 'username', 'email', 'role'], // only desired fields
+            where: {
+                role: Not(UserRole.ADMIN) // exclude admins
+            }
+        });
       }
       catch(error){
         throw error;

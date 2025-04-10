@@ -28,6 +28,7 @@ import { ArticlesComponent } from './components/articles/articles.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { NewArticleComponent } from '../../components/article/new-article.component';
 import { ArticleAnalyticsComponent } from './components/article-analytics/article-analytics.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,7 @@ import { ArticleAnalyticsComponent } from './components/article-analytics/articl
     ArticlesComponent,
     AnalyticsComponent,
     NewArticleComponent,
-    // UsersComponent,
+    UsersComponent,
     ArticleAnalyticsComponent
   ]
 })
