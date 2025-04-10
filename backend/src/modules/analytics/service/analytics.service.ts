@@ -43,4 +43,22 @@ export class AnalyticsService{
             }
         }
     }
+
+    async getArticleAnalytics(article_id: string) {
+        try{
+            const result = await this.analyticsRepository.getArticleAnalytics(article_id);
+            return {
+                success: true,
+                message: 'Article Analytics are fetched successfully',
+                analytics: result
+            }
+        }catch(error){
+            console.error('Error in fetching the article analytics: ', error.message);
+            return {
+                success: false,
+                message: 'Failed to fetch the article analytics',
+                analytics: null
+            }
+        }
+    }
 }

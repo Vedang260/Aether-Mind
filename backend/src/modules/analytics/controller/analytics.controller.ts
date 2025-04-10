@@ -26,4 +26,11 @@ export class AnalyticsController{
         return await this.analyticsService.adminDashboardAnalytics();
     }
 
+    @Get('article-analytics/:id')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async getArticleAnalytics(@Param('id') id: string){
+        return await this.analyticsService.getArticleAnalytics(id);
+    }
+
 }

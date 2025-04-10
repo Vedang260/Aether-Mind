@@ -157,4 +157,102 @@ export class AnalyticsRepository{
             throw new InternalServerErrorException('Error fetching category analytics');
         }
     }
+
+    async getArticleAnalytics(article_id: string){
+        try{
+            const [totalViewsResult, totalCommentsResult, totalPeopleRatedResult, commentHeatmap,  ratingDistribution, weeklyEngagement, comparisonMatrix] = await Promise.all([
+                this.dataSource.query(
+                    ` -- 📊 Article View Count
+                        SELECT
+                            a.views AS total_views
+                        FROM articles a
+                        WHERE a.article_id = '${article_id}'
+                    `),
+                this.dataSource.query(
+                    `-- 📈 Article Comments Count
+                        SELECT
+                            COUNT(*) AS totalComments
+                        FROM comments c
+                        WHERE c.article_id = '${article_id}';
+                    `),
+                this.dataSource.query(
+                        `-- 📈 Article Ratings Count
+                            SELECT
+                                COUNT(*) AS totalPeopleRated
+                            FROM ratings r
+                            WHERE r.article_id = '${article_id}';
+                        `),
+                    this.dataSource.query(
+                        `SELECT
+                            a.article_id,
+                            a.title,
+                            TO_CHAR(cm.created_at, 'Day') AS day_of_week,
+                            COUNT(cm.comment_id) AS total_comments
+                        FROM articles a
+                        LEFT JOIN comments cm ON a.article_id = cm.article_id
+                        WHERE a.article_id = '${article_id}'
+                        GROUP BY a.article_id, day_of_week
+                        ORDER BY day_of_week ASC;
+                        `),
+                    this.dataSource.query(
+                                    `SELECT
+                            a.article_id,
+                            a.title,
+                            r.rating AS rating,
+                            COUNT(r.rating_id) AS rating_count
+                        FROM articles a
+                        LEFT JOIN ratings r ON a.article_id = r.article_id
+                        WHERE a.article_id = '${article_id}'
+                        GROUP BY a.article_id, rating
+                        ORDER BY rating DESC;
+                        `),
+                    this.dataSource.query(
+                    `-- 📅 Weekly Engagement (comments vs ratings)
+                        SELECT
+                            a.article_id,
+                            a.title,
+                            DATE_TRUNC('week', COALESCE(cm.created_at, r.created_at)) AS week,
+                            COUNT(DISTINCT cm.comment_id) AS total_comments,
+                            COUNT(DISTINCT r.rating_id) AS total_ratings
+                        FROM articles a
+                        LEFT JOIN comments cm ON a.article_id = cm.article_id
+                        LEFT JOIN ratings r ON a.article_id = r.article_id
+                        WHERE a.article_id = '${article_id}'
+                        GROUP BY a.article_id, week
+                        ORDER BY week ASC;
+                        `),
+                    this.dataSource.query(
+                            ` -- 🌐 Comparison Matrix (views vs comments vs ratings)
+                        SELECT
+                            a.article_id,
+                            a.title,
+                            COALESCE(a.views, 0) AS total_views,
+                            COUNT(DISTINCT cm.comment_id) AS total_comments,
+                            COUNT(DISTINCT r.rating_id) AS total_ratings
+                        FROM articles a
+                        LEFT JOIN comments cm ON a.article_id = cm.article_id
+                        LEFT JOIN ratings r ON a.article_id = r.article_id
+                        WHERE a.article_id = '${article_id}'
+                        GROUP BY a.article_id, a.title, a.views;
+                        `),
+                ]);
+
+                const totalViews = totalViewsResult[0]?.total_views || 0;
+                const totalComments = totalCommentsResult[0]?.totalcomments || 0;
+                const totalPeopleRated = totalPeopleRatedResult[0]?.totalpeoplerated || 0;
+
+                return {
+                    totalViews,
+                    totalComments,
+                    totalPeopleRated,
+                    commentHeatmap,
+                    ratingDistribution,
+                    weeklyEngagement,
+                    comparisonMatrix
+                }
+        }catch(error){
+            console.error('Error fetching article analytics:', error.message);
+            throw new InternalServerErrorException('Error fetching article analytics');
+        }
+    }
 }
