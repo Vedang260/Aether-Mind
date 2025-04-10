@@ -59,7 +59,8 @@ export class DashboardComponent implements OnInit {
       { icon: 'category', title: 'Total Categories', value: this.analytics?.totalCategories, displayValue: '0', color: 'linear-gradient(135deg, #4CAF50, #8BC34A)' },
       { icon: 'people', title: 'Total Users', value: this.analytics?.totalUsers, displayValue: '0', color: 'linear-gradient(135deg, #FF9800, #FFC107)' },
       { icon: 'comment', title: 'Total Comments', value: this.analytics?.totalComments, displayValue: '0', color: 'linear-gradient(135deg, #9C27B0, #E91E63)' },
-      { icon: 'visibility', title: 'Total Views', value: this.analytics?.totalViews, displayValue: '0', color: 'linear-gradient(135deg, #00BCD4, #03A9F4)' }
+      { icon: 'visibility', title: 'Total Views', value: this.analytics?.totalViews, displayValue: '0', color: 'linear-gradient(135deg, #00BCD4, #03A9F4)' },
+      { icon: 'star', title: 'People Rated', value: this.analytics?.totalRatings, displayValue: '0', color: 'linear-gradient(135deg, #FFD700, #FFA500)' }
     ];
   }
 
