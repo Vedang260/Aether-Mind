@@ -1,71 +1,165 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
 import {
-    ApexAxisChartSeries,
-    ApexChart,
-    ApexNonAxisChartSeries,
-    ApexXAxis,
-    ChartComponent,
-    NgApexchartsModule
-  } from 'ng-apexcharts';
-import { ArticleCounts, CommentHeatMap, weeklyEngagement, ratingDistribution, topArticles } from '../../../../shared/models/analytics.model';
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexNonAxisChartSeries,
+  ApexXAxis,
+  ApexDataLabels,
+  ApexTitleSubtitle,
+  ApexPlotOptions,
+  ApexFill,
+  ApexStroke,
+  ApexLegend,
+  ApexGrid,
+  NgApexchartsModule,
+} from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { MatSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-analytics',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgApexchartsModule,
-    ChartComponent
-  ],
+  imports: [CommonModule, NgApexchartsModule, MatIconModule, MatSpinner],
   templateUrl: './analytics.component.html',
-  styleUrls: ['./analytics.component.css']
+  styleUrls: ['./analytics.component.css'],
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ])
+    ])
+  ]
 })
-
 export class AnalyticsComponent implements OnInit {
   timeRange = 'week';
   analyticsData: any;
+  isLoading = false;
 
-  // Chart Configs
-  // Add missing properties to your chart configs
+  // Chart Configurations
   articleCountChart: ApexChart = {
-    type: 'treemap',
-    height: 300,
-    toolbar: { show: false }
+    type: 'bar',
+    height: 350,
+    toolbar: { show: true },
+    animations: {
+      enabled: true,
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350
+      }
+    }    
   };
-  
-  engagementChart: ApexChart = {
-    type: 'line',
-    height: 300,
-    toolbar: { show: false }
-  };
-  
-  ratingChart: ApexChart = {
-    type: 'radialBar',
-    height: 300
-  };
-  
-  heatmapChart: ApexChart = {
-    type: 'heatmap',
-    height: 300
-  };
-  
-  
   articleCountSeries: ApexAxisChartSeries = [];
 
-  
-  engagementSeries: ApexAxisChartSeries = [];
-  engagementXAxis: ApexXAxis = { type: 'datetime' };
+  viewsOverTimeChart: ApexChart = {
+    type: 'area',
+    height: 350,
+    toolbar: { show: true },
+    animations: {
+      enabled: true,
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350
+      }
+    }
+    
+  };
+  viewsOverTimeSeries: ApexAxisChartSeries = [];
+  viewsOverTimeXAxis: ApexXAxis = { type: 'datetime' };
 
-  
+  commentHeatmapChart: ApexChart = {
+    type: 'heatmap',
+    height: 350,
+    toolbar: { show: true }
+  };
+  commentHeatmapSeries: ApexAxisChartSeries = [];
+
+  ratingChart: ApexChart = {
+    type: 'radialBar',
+    height: 350,
+    toolbar: { show: false }
+  };
   ratingSeries: ApexNonAxisChartSeries = [];
   ratingLabels: string[] = [];
 
-  
-  heatmapSeries: ApexAxisChartSeries = [];
+  engagementChart: ApexChart = {
+    type: 'line',
+    height: 350,
+    toolbar: { show: true },
+    animations: {
+      enabled: true,
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350
+      }
+    }
+    
+  };
+  engagementSeries: ApexAxisChartSeries = [];
+  engagementXAxis: ApexXAxis = { type: 'datetime' };
 
-  topArticles: topArticles[] = [];
+  topArticlesChart: ApexChart = {
+    type: 'bar',
+    height: 350,
+    toolbar: { show: true },
+    animations: {
+      enabled: true,
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350
+      }
+    }    
+  };
+  topArticlesSeries: ApexAxisChartSeries = [];
+
+  comparisonMatrixChart: ApexChart = {
+    type: 'scatter',
+    height: 350,
+    toolbar: { show: true },
+    animations: {
+      enabled: true,
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350
+      }
+    }    
+  };
+  comparisonMatrixSeries: ApexAxisChartSeries = [];
+
   constructor(private analyticsService: AnalyticsService) {}
 
   ngOnInit() {
@@ -73,32 +167,61 @@ export class AnalyticsComponent implements OnInit {
   }
 
   fetchData() {
+    this.isLoading = true;
     this.analyticsService.getDashboardAnalytics().subscribe({
       next: (data) => {
         this.analyticsData = data.analytics;
         this.prepareCharts();
+        this.isLoading = false;
       },
-      error: (err) => console.error('Failed to load analytics:', err)
+      error: (err) => {
+        console.error('Failed to load analytics:', err);
+        this.isLoading = false;
+      }
     });
   }
 
   prepareCharts() {
-    // Article Count Treemap
+    // Article Count Bar Chart
     this.articleCountSeries = [{
-        data: (this.analyticsData.articleCounts || [])
-          .filter((item: ArticleCounts) => parseInt(item.article_count) > 0)
-          .map((item: ArticleCounts) => ({
-            x: item.name,
-            y: parseInt(item.article_count)
-          }))
-      }];
-    // Engagement Trend
+      name: 'Articles',
+      data: this.analyticsData.articleCounts
+        .filter((item: any) => parseInt(item.article_count) > 0)
+        .map((item: any) => ({
+          x: item.name,
+          y: parseInt(item.article_count)
+        }))
+    }];
+
+    // Views Over Time Area Chart
+    this.viewsOverTimeSeries = [{
+      name: 'Views',
+      data: this.analyticsData.viewsOverTime
+        .filter((item: any) => parseInt(item.total_views) > 0)
+        .map((item: any) => ({
+          x: new Date(item.week).getTime(),
+          y: parseInt(item.total_views)
+        }))
+    }];
+
+    // Comment Heatmap
+    this.commentHeatmapSeries = this.groupHeatmapData(this.analyticsData.commentHeatmap);
+
+    // Rating Distribution Radial Bar
+    const ratingData = this.analyticsData.ratingDistribution
+      .filter((item: any) => parseInt(item.rating_count) > 0);
+    this.ratingSeries = ratingData.map((item: any) => 
+      Math.round((parseInt(item.rating) / 5) * 100)
+    );
+    this.ratingLabels = ratingData.map((item: any) => `${item.name} (${item.rating}★)`);
+
+    // Weekly Engagement Line Chart
     this.engagementSeries = [
       {
         name: 'Comments',
         data: this.analyticsData.weeklyEngagement
-          .filter((item: weeklyEngagement) => parseInt(item.total_comments) > 0)
-          .map((item: weeklyEngagement) => ({
+          .filter((item: any) => parseInt(item.total_comments) > 0)
+          .map((item: any) => ({
             x: new Date(item.week).getTime(),
             y: parseInt(item.total_comments)
           }))
@@ -106,38 +229,41 @@ export class AnalyticsComponent implements OnInit {
       {
         name: 'Ratings',
         data: this.analyticsData.weeklyEngagement
-          .filter((item: weeklyEngagement) => parseInt(item.total_ratings) > 0)
-          .map((item: weeklyEngagement) => ({
+          .filter((item: any) => parseInt(item.total_ratings) > 0)
+          .map((item: any) => ({
             x: new Date(item.week).getTime(),
             y: parseInt(item.total_ratings)
           }))
       }
     ];
 
-    // Rating Distribution
-    const ratingData = this.analyticsData.ratingDistribution
-      .filter((item: ratingDistribution) => parseInt(item.rating_count) > 0);
-    this.ratingSeries = ratingData.map((item: ratingDistribution) => 
-      Math.round((item.rating / 5) * 100)
-    );
-    this.ratingLabels = ratingData.map((item: ratingDistribution) => item.name);
+    // Top Articles Bar Chart
+    this.topArticlesSeries = [{
+      name: 'Views',
+      data: this.analyticsData.topArticles
+        .filter((item: any) => item.views)
+        .map((item: any) => ({
+          x: item.title,
+          y: parseInt(item.views)
+        }))
+    }];
 
-    // Heatmap
-    this.heatmapSeries = this.groupHeatmapData(
-      this.analyticsData.commentHeatmap
-    );
-
-    // Top Articles
-    this.topArticles = this.analyticsData.topArticles?.map((article: any) => ({
-        title: article.title,
-        views: article.views,
-        engagementData: article?.engagementData || [30,40,35,50,49,60] // Default fallback
-      })) || [];
-  
-  
+    // Comparison Matrix Scatter Chart
+    this.comparisonMatrixSeries = [
+      {
+        name: 'Views vs Comments',
+        data: this.analyticsData.comparisonMatrix
+          .filter((item: any) => parseInt(item.total_views) > 0 || parseInt(item.total_comments) > 0)
+          .map((item: any) => ({
+            x: parseInt(item.total_views),
+            y: parseInt(item.total_comments),
+            name: item.name
+          }))
+      }
+    ];
   }
 
-  groupHeatmapData(rawData: CommentHeatMap[]) {
+  groupHeatmapData(rawData: any[]) {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     return days.map(day => {
       const dayData = rawData.find(d => d.day_of_week?.trim() === day);
@@ -154,10 +280,5 @@ export class AnalyticsComponent implements OnInit {
   setTimeRange(range: string) {
     this.timeRange = range;
     this.fetchData();
-  }
-
-  getEngagementDataForArticle(articleId: string): number[] {
-    // 🚀 Optional: Map your real data if you have any
-    return [30, 40, 35, 50, 49, 60]; // Dummy static data, or fetch from your analyticsData if available
   }
 }

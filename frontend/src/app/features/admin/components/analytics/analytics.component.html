@@ -1,88 +1,129 @@
-<div class="dashboard-container">
-    <!-- Header -->
-    <div class="dashboard-header">
-      <h1>Knowledge Base Analytics</h1>
-      <div class="time-filter">
-        <button (click)="setTimeRange('week')" [class.active]="timeRange === 'week'">Weekly</button>
-        <button (click)="setTimeRange('month')" [class.active]="timeRange === 'month'">Monthly</button>
-      </div>
+<div class="analytics-container">
+  <!-- Animated Background -->
+  <div class="background-elements">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="analytics-header" [@fadeInUp]>
+    <div class="logo-container">
+      <svg class="logo-icon" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+      </svg>
+      <h1>Analytics <span>Dashboard</span></h1>
     </div>
-  
-    <!-- Main Grid -->
-    <div class="grid-container">
-      <!-- Article Distribution -->
-      <div class="card treemap-card">
-        <h2>Article Distribution</h2>
-        <div id="treemap-chart">
-          <apx-chart 
-            [series]="articleCountSeries"
-            [chart]="articleCountChart"
-            [colors]="['#3B82F6', '#6366F1', '#8B5CF6']"
-            [dataLabels]="{ enabled: false }"
-          ></apx-chart>
-        </div>
-      </div>
-  
-      <!-- Engagement Trends -->
-      <div class="card line-card">
-        <h2>Weekly Engagement</h2>
-        <apx-chart
-          [series]="engagementSeries"
-          [chart]="engagementChart"
-          [xaxis]="engagementXAxis"
-          [stroke]="{ curve: 'smooth', width: [2, 4] }"
-          [colors]="['#10B981', '#3B82F6']"
-        ></apx-chart>
-      </div>
-  
-      <!-- Rating Distribution -->
-      <div class="card radial-card">
-        <h2>Rating Analysis</h2>
-        <apx-chart
-          [series]="ratingSeries"
-          [chart]="ratingChart"
-          [labels]="ratingLabels"
-          [plotOptions]="{ radialBar: { offsetY: 0, hollow: { size: '30%' } } }"
-          [colors]="['#F59E0B', '#EF4444', '#10B981']"
-        ></apx-chart>
-      </div>
-  
-      <!-- Comment Activity -->
-      <div class="card heatmap-card">
-        <h2>Comment Activity</h2>
-        <apx-chart
-          [series]="heatmapSeries"
-          [chart]="heatmapChart"
-          [dataLabels]="{ enabled: false }"
-          [colors]="['#ECFDF5', '#D1FAE5', '#A7F3D0', '#6EE7B7']"
-        ></apx-chart>
-      </div>
-  
-      <!-- Top Articles -->
-      <div class="card table-card">
-        <h2>Top Performing Articles</h2>
-        <div class="article-table">
-          <div class="table-header">
-            <span>Title</span>
-            <span>Views</span>
-            <span>Engagement</span>
-          </div>
-          // And update the template usage
-<div class="table-row" *ngFor="let article of topArticles">
-  <span class="truncate">{{ article.title }}</span>
-  <span>{{ article.views }}</span>
-  <span class="sparkline">
-    <apx-chart
-      [series]="[{ data: article?.engagementData || [30,40,35,50,49,60] }]"
-      [chart]="{ sparkline: { enabled: true }, type: 'area' }"
-      [stroke]="{ curve: 'smooth', width: 2 }"
-      [fill]="{ opacity: 0.3 }"
-      width="80"
-      height="30"
-    ></apx-chart>
-  </span>
-</div>
-        </div>
-      </div>
+    <div class="time-filter">
+      <button (click)="setTimeRange('week')" [class.active]="timeRange === 'week'">Weekly</button>
+      <button (click)="setTimeRange('month')" [class.active]="timeRange === 'month'">Monthly</button>
     </div>
   </div>
+
+  <!-- Charts Grid -->
+  <div class="grid-container">
+    <!-- Article Count -->
+    <div class="card" [@fadeInUp]>
+      <h2>Article Distribution</h2>
+      <apx-chart
+        [series]="articleCountSeries"
+        [chart]="articleCountChart"
+        [colors]="['#6e8efb', '#a777e3', '#3b82f6', '#10b981', '#f59e0b']"
+        [plotOptions]="{ bar: { horizontal: true, barHeight: '70%' } }"
+        [dataLabels]="{ enabled: true, style: { colors: ['#fff'] } }"
+        [xaxis]="{ title: { text: 'Number of Articles' } }"
+        [title]="{ text: 'Articles by Category', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Views Over Time -->
+    <div class="card" [@fadeInUp]>
+      <h2>Views Over Time</h2>
+      <apx-chart
+        [series]="viewsOverTimeSeries"
+        [chart]="viewsOverTimeChart"
+        [xaxis]="viewsOverTimeXAxis"
+        [colors]="['#6e8efb']"
+        [fill]="{ type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 } }"
+        [stroke]="{ curve: 'smooth', width: 3 }"
+        [dataLabels]="{ enabled: false }"
+        [title]="{ text: 'Weekly Views', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Comment Heatmap -->
+    <div class="card" [@fadeInUp]>
+      <h2>Comment Activity</h2>
+      <apx-chart
+        [series]="commentHeatmapSeries"
+        [chart]="commentHeatmapChart"
+        [colors]="['#10b981', '#34d399', '#6ee7b7', '#a7f3d0']"
+        [dataLabels]="{ enabled: true, style: { colors: ['#333'] } }"
+        [title]="{ text: 'Comments by Day', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Rating Distribution -->
+    <div class="card" [@fadeInUp]>
+      <h2>Rating Distribution</h2>
+      <apx-chart
+        [series]="ratingSeries"
+        [chart]="ratingChart"
+        [labels]="ratingLabels"
+        [colors]="['#f59e0b', '#ef4444', '#10b981', '#3b82f6']"
+        [plotOptions]="{ radialBar: { hollow: { size: '50%' }, dataLabels: { show: true, name: { show: true }, value: { show: true } } } }"
+        [title]="{ text: 'Rating Percentages', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Weekly Engagement -->
+    <div class="card" [@fadeInUp]>
+      <h2>Weekly Engagement</h2>
+      <apx-chart
+        [series]="engagementSeries"
+        [chart]="engagementChart"
+        [xaxis]="engagementXAxis"
+        [colors]="['#a777e3', '#f59e0b']"
+        [stroke]="{ curve: 'smooth', width: [3, 3] }"
+        [dataLabels]="{ enabled: false }"
+        [legend]="{ position: 'top' }"
+        [title]="{ text: 'Comments & Ratings', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Top Articles -->
+    <div class="card" [@fadeInUp]>
+      <h2>Top Performing Articles</h2>
+      <apx-chart
+        [series]="topArticlesSeries"
+        [chart]="topArticlesChart"
+        [colors]="['#3b82f6', '#6e8efb', '#a777e3']"
+        [plotOptions]="{ bar: { horizontal: false, columnWidth: '55%' } }"
+        [dataLabels]="{ enabled: true, style: { colors: ['#fff'] } }"
+        [xaxis]="{ labels: { rotate: -45 } }"
+        [title]="{ text: 'Article Views', align: 'center', style: { color: '#333' } }"
+      ></apx-chart>
+    </div>
+
+    <!-- Comparison Matrix -->
+    <div class="card" [@fadeInUp]>
+      <h2>Engagement Matrix</h2>
+      <apx-chart
+        [series]="comparisonMatrixSeries"
+        [chart]="comparisonMatrixChart"
+        [colors]="['#ef4444']"
+        [xaxis]="{ title: { text: 'Views' } }"
+        [yaxis]="{ title: { text: 'Comments' } }"
+        [title]="{ text: 'Views vs Comments', align: 'center', style: { color: '#333' } }"
+        [markers]="{ size: 6 }"
+      ></apx-chart>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</div>
