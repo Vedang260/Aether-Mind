@@ -33,4 +33,5 @@ export class AnalyticsController{
         return await this.analyticsService.getArticleAnalytics(id);
     }
 
+    
 }

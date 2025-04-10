@@ -147,4 +147,22 @@ export class ArticlesService{
             }
         }
     }
+
+    async getRelatedArticles(article_id: string): Promise<{ success: boolean; message: string; articles: Articles | null}>{
+        try{
+            const relatedArticles = await this.articlesRepository.getRelatedArticles(article_id);
+            return{
+                success: true,
+                message: 'Start reading your Article',
+                articles: relatedArticles
+            }
+        }catch(error){
+            console.error('Error in fetching an article: ', error.message);
+            return{
+                success: false,
+                message: 'Failed to fetch the article',
+                articles: null
+            }
+        }
+    }
 }

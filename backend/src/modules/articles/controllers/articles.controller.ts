@@ -67,8 +67,6 @@ export class ArticlesController{
 
     @Get(':id/related')
     async getRelated(@Param('id') id: string) {
-        const response = await this.articlesService.getArticle(id);
-        if(response.article)
-            return this.searchService.getRelatedArticles(response.article);
+        return await this.articlesService.getRelatedArticles(id);
     }
 }

@@ -1,6 +1,6 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Articles } from "../entities/article.entity";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CreateArticleDto } from "../dtos/createArticle.dto";
 import { UpdateArticleDto } from "../dtos/updateArticle.dto";
@@ -9,7 +9,8 @@ import { UpdateArticleDto } from "../dtos/updateArticle.dto";
 export class ArticlesRepository{
     constructor( 
         @InjectRepository(Articles)
-        private readonly articlesRepository: Repository<Articles>
+        private readonly articlesRepository: Repository<Articles>,
+        private readonly dataSource: DataSource
     ){}
 
     async createArticle(createArticleDto: CreateArticleDto): Promise<Articles | null>{
@@ -70,6 +71,29 @@ export class ArticlesRepository{
         }catch(error){
             console.error('Error in updating view count: ', error.message);
             throw new InternalServerErrorException('Error in updating view count: ');   
+        }
+    }
+
+    async getRelatedArticles(article_id: string){
+        try{
+            const relatedArticles = await this.dataSource.query(
+                `SELECT a.*
+                 FROM articles a
+                 WHERE a.category_id = (
+                     SELECT category_id
+                     FROM articles
+                     WHERE article_id = $1
+                 )
+                 AND a.article_id != $1
+                 ORDER BY a.created_at DESC
+                 LIMIT 4;`,
+                [article_id]
+            );
+    
+            return relatedArticles;
+        }catch(error){
+            console.error('Error in fetching related articles: ', error.message);
+            throw new InternalServerErrorException('Error in fetching related articles: ');   
         }
     }
 }
