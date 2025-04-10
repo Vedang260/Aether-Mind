@@ -19,7 +19,7 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { trigger, transition, style, animate, stagger, query } from '@angular/animations';
 import { MatBadgeModule } from '@angular/material/badge';
 import { Subject, takeUntil } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { SearchService } from '../../../../core/services/search.service';
 
 @Component({
@@ -99,7 +99,8 @@ export class ArticlesComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private http: HttpClient, 
-    private searchService: SearchService
+    private searchService: SearchService,
+    public router: Router
 
   ) {
     this.articleForm = this.fb.group({

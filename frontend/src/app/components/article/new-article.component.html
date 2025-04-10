@@ -1,0 +1,142 @@
+<div class="article-container">
+    <!-- Animated Background Elements -->
+    <div class="background-elements">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+    </div>
+  
+    <!-- Article Form Card -->
+    <div class="article-card" [@fadeInUp]>
+      <div class="article-header">
+        <div class="logo-container">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M7,17V18H17V17C17,15.3 15.7,14 14,14H10C8.3,14 7,15.3 7,17Z" />
+          </svg>
+          <h1>{{ isEditMode ? 'Edit Article' : 'New Article' }}</h1>
+        </div>
+        <p class="article-subtitle">{{ isEditMode ? 'Update your article details' : 'Create a new article for AetherMind' }}</p>
+      </div>
+  
+      <form [formGroup]="articleForm" (ngSubmit)="onSubmit()" class="article-form">
+        <!-- Category Dropdown -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Category</mat-label>
+          <mat-icon matPrefix>category</mat-icon>
+          <mat-select formControlName="category_id" required>
+            <mat-option *ngFor="let category of categories" [value]="category.category_id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="articleForm.get('category_id')?.hasError('required') && articleForm.get('categoryId')?.touched">
+            Category is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Image Upload -->
+        <div class="image-upload" [@fadeIn]>
+          <label class="upload-label">
+            <mat-icon>image</mat-icon>
+            <span>{{ image_url ? 'Image Uploaded' : 'Upload Article Image' }}</span>
+            <input type="file" accept="image/*" (change)="onImageUpload($event)" hidden>
+          </label>
+          <div class="image-preview" *ngIf="image_url">
+            <img [src]="image_url" alt="Uploaded Image">
+          </div>
+          <mat-error *ngIf="articleForm.get('image_url')?.hasError('required') && articleForm.get('image_url')?.touched">
+            Image is required
+          </mat-error>
+        </div>
+  
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Title</mat-label>
+          <mat-icon matPrefix>title</mat-icon>
+          <input matInput formControlName="title" placeholder="Enter article title" required>
+          <mat-error *ngIf="articleForm.get('title')?.hasError('required') && articleForm.get('title')?.touched">
+            Title is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Description</mat-label>
+          <mat-icon matPrefix>description</mat-icon>
+          <textarea matInput formControlName="description" placeholder="Enter article description" rows="3" required></textarea>
+          <mat-error *ngIf="articleForm.get('description')?.hasError('required') && articleForm.get('description')?.touched">
+            Description is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Quote -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Quote</mat-label>
+          <mat-icon matPrefix>format_quote</mat-icon>
+          <input matInput formControlName="quote" placeholder="Enter a notable quote" required>
+          <mat-error *ngIf="articleForm.get('quote')?.hasError('required') && articleForm.get('quote')?.touched">
+            Quote is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Introduction -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Introduction</mat-label>
+          <mat-icon matPrefix>article</mat-icon>
+          <textarea matInput formControlName="introduction" placeholder="Enter article introduction" rows="4" required></textarea>
+          <mat-error *ngIf="articleForm.get('introduction')?.hasError('required') && articleForm.get('introduction')?.touched">
+            Introduction is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Content -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Content</mat-label>
+          <mat-icon matPrefix>subject</mat-icon>
+          <textarea matInput formControlName="content" placeholder="Enter main article content" rows="6" required></textarea>
+          <mat-error *ngIf="articleForm.get('content')?.hasError('required') && articleForm.get('content')?.touched">
+            Content is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Did You Know -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Did You Know</mat-label>
+          <mat-icon matPrefix>lightbulb</mat-icon>
+          <textarea matInput formControlName="did_you_know" placeholder="Enter interesting fact" rows="3" required></textarea>
+          <mat-error *ngIf="articleForm.get('did_you_know')?.hasError('required') && articleForm.get('did_you_know')?.touched">
+            Did You Know is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Conclusion -->
+        <mat-form-field appearance="outline" class="form-field" [@fadeIn]>
+          <mat-label>Conclusion</mat-label>
+          <mat-icon matPrefix>check_circle</mat-icon>
+          <textarea matInput formControlName="conclusion" placeholder="Enter article conclusion" rows="4" required></textarea>
+          <mat-error *ngIf="articleForm.get('conclusion')?.hasError('required') && articleForm.get('conclusion')?.touched">
+            Conclusion is required
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Buttons -->
+        <div class="form-actions">
+          <button mat-raised-button class="ai-button" (click)="generateWithAI()" [disabled]="!image_url || isGenerating">
+            <mat-icon>auto_awesome</mat-icon>
+            <span *ngIf="!isGenerating">Create Article with AI</span>
+            <mat-spinner *ngIf="isGenerating" diameter="24"></mat-spinner>
+          </button>
+          <div class="action-buttons">
+            <button mat-stroked-button class="cancel-button" (click)="onCancel()" [disabled]="isLoading">
+              Cancel
+            </button>
+            <button mat-raised-button class="save-button" type="submit" [disabled]="articleForm.invalid || isLoading">
+              <span *ngIf="!isLoading">Save</span>
+              <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>

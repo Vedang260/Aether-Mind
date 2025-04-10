@@ -1,7 +1,7 @@
 <div class="articles-container">
     <div class="header">
       <h1>Manage <span>Articles</span></h1>
-      <button mat-raised-button class="add-btn" (click)="openArticleForm()">
+      <button mat-raised-button class="add-btn" (click)="router.navigate(['/admin/new-article'])">
         <mat-icon>post_add</mat-icon>
         New Article
       </button>
@@ -29,7 +29,7 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #articleMenu="matMenu">
-              <button mat-menu-item (click)="openArticleForm(article)">
+              <button mat-menu-item [routerLink]="['/admin/edit-article', article.id]">
                 <mat-icon>edit</mat-icon>
                 <span>Edit</span>
               </button>

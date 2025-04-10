@@ -26,6 +26,7 @@ import { QuillModule } from 'ngx-quill';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { ArticlesComponent } from './components/articles/articles.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
+import { NewArticleComponent } from '../../components/article/new-article.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { AnalyticsComponent } from './components/analytics/analytics.component';
     CategoriesComponent,
     ArticlesComponent,
     AnalyticsComponent,
+    NewArticleComponent
     // UsersComponent
   ]
 })

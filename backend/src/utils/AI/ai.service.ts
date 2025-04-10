@@ -57,7 +57,7 @@ export class AIService {
     async getImageCaption(data): Promise<string>{
       try{
         const response = await fetch(
-          "https://router.huggingface.co/hf-inference/models/Salesforce/blip-image-captioning-large",
+          "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large",
           {
             headers: {
             Authorization: `Bearer ${this.huggingFaceApiKey}`,
@@ -67,7 +67,9 @@ export class AIService {
             body: JSON.stringify(data),
             }
         );
+        console.log(response);
         const result = await response.json();
+        console.log(result);
         return result[0].generated_text;
       }catch(error){
           console.error('Error in image caption generation: ', error.message);
