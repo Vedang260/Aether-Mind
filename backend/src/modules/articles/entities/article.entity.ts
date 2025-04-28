@@ -41,6 +41,15 @@ export class Articles {
   @Column({ type: 'text', nullable: true })
   summary: string;
 
+  @Column({ type: 'text', nullable: true })
+  short_summary: string;
+
+  @Column({ type: 'text', nullable: true })
+  medium_summary: string;
+
+  @Column({ type: 'text', nullable: true })
+  long_summary: string;
+  
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'author_id' })
   author: User;
