@@ -22,13 +22,22 @@ export class ArticleProcessor {
         if (!article) 
             throw new NotFoundException('Article is not found');
 
-        // Generate  updated summary & tags
-        article.summary = await this.aiService.generateSummary(article.content);
-        article.tags = await this.aiService.generateTags(article.content);
+        const longContext = article.introduction + article.description + article.content + article.did_you_know + article.conclusion;
 
+        // Generate  updated summary
+        article.summary = await this.aiService.generateSummary(longContext);
+        // Generate Context Aware Summaries
+        
         const articleData = { ...article} as UpdateArticleDto;
         await this.articlesRepository.updateArticle(article.article_id, articleData);
         await this.searchService.indexArticle(articleData);
+
+        // Generate tags
+        article.tags = await this.aiService.generateTags(article.content);
+
+        const articleData2 = { ...article} as UpdateArticleDto;
+        await this.articlesRepository.updateArticle(article.article_id, articleData2);
+        await this.searchService.indexArticle(articleData2);
     }catch(error){
         console.error('Error in article processing: ', error.message);
     }
